@@ -1,0 +1,113 @@
+SELECT E1.DEPNO, E1.ENAME, E1.SAL,
+E2.DEPNO, E1.ENAME, E1.SAL
+
+FROM EMP E1, EMP E2
+WHERE E1.MGR = E2.MGR
+AND E1.SAL > E2.SAL;
+
+--표준 JOIN 1. INNER JOIN--
+
+SELECT T1.ENAME, T1.NO, T2.NAME, T2.NO
+FROM TABLE_1 T1 INNER JOIN TABLE_2 T2
+USING(ENAME);
+
+-- 서브쿼리: WHERE HAVING절 --
+
+SELECT EMPNO, ENAME, SAL
+FROM EMP
+WHERE SAL>(SELECT AVG(SAL) 
+FROM EMP);
+
+/*
+서브 쿼리에는 다양한 서브쿼리가 있다
+1. 단일행 서브쿼리
+2. 다중행 서브쿼리
+3. 다중컬럼 서브쿼리
+4. 상호연관 서브쿼리
+*/
+
+-- FROM 절 : 인라인 뷰--
+
+SELECT E.EMPNO, E.ENAME, E.SAL, I.MAX_SAL
+FROM EMP E, (SELECT DEPTNO, MAX(SAL) AS MAS_SAL FROM EMP
+GROUP BY DEPTNO) I
+WHERE E.DEPNO = I.DEPNO
+AND E.SAL = I.SAL;
+
+/*
+집합 연산자
+합집합 : 1. UNION(중복 X) 2. UNION ALL (중복 O)
+교집합 : INTERSECT
+차집합 : 1. MINUS 2. EXECPT */
+
+SELECT EMPNO, ENAME, DEPTNO
+FROM EMP
+WHERE DEPTNO != 10
+UNION
+SELECT EMPNO, ENAME, DEPTNO
+FROM EMP 
+WHERE DEPNO != 20
+-- 이렇게 두개의 메인쿼리를 UNION 하면 된다.--
+
+
+-- 차집합 집합연산자 예제--
+
+SELECT EMPNO, ENAME, DEPTNO
+FROM EMP
+WHERE DEPTNO != 10
+MINUS
+SELECT EMPNO, ENAME, DEPTNO
+FROM EMP
+WHERE DEPTNO != 20;
+
+/*
+TOP N QUERY
+페이징 처리를 효과적으로 수행하기 위해 사용
+1. ROWNUM
+2. RANK
+3. FETCH
+4. TOP N( SQL SERVER) */
+
+--TOP N QUERY ROWNUM--
+
+SELECT ROWNUM, EMP.*
+FROM EMP
+WHERE SAL>= 1500;
+
+-- ROWNUM에서 주의 할점 -> = 사용하면 안된다.--
+
+-- 알맞은 ROWNUM 사용예제--
+SELECT EMPNO, ENAME, DEPT, SAL
+FROM EMP
+WHERE ROWNUM <= 5;
+
+
+--FETCH -> 출력될 행의 수를 제한하는 절--
+
+SELECT EMPNO, ENAME, DEPNO, JOB, SAL
+FROM EMP
+ORDER BY SAL DESC
+OFFSET 3 ROWNUM -- 상위 3개를 건너 뛴다--
+FETCH FIRST 2 ROW ONLY;
+
+
+
+SELECT ENAME, DEPNO 
+FROM EMP
+WHERE ENAME > 10;
+ORDER BY DEPNO DESC
+
+
+SELECT ENAME, DEPTNO
+FROM EMP
+WHERE ENAME > 20;
+
+-- 인덱스 
+-- 테이블의 검색 속도를 향상시키기 위해 사용되어짐
+
+CREATE index t_01 on t (deptno, no);
+-- -> t테이블의 deptno, no의 컬럼을 인덱스생성하고, 그 이름을 t_01이라고 설정
+
+
+
+
