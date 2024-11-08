@@ -229,10 +229,13 @@ create table dept(
    loc varchar2(13))
    cluster c_dept#(deptno);
 
+p159.
 
+#부분범위 처리 활용
+부분범위 처리
+- DBMS에서 데이터를 모두 읽어 한번에 전송하는것이 아니라 일정량 데이터를 전송하고 멈추는 활동
 
-
-
+1108 P165. 3.2.1 까지 읽음
 
 
 
