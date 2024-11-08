@@ -125,3 +125,124 @@ solution
  - Index Range Scan Descending
  
 
+p151.
+# convered 쿼리
+- 테이블 액세스를 하지 않고 인덱스만 읽어서 처리하는 쿼리
+
+# include 인덱스
+- 인덱스 키 외에 미리 지정한 컬럼을 리프레벨과 함께 저장
+- ex 1 : create index emp_x on  emp (deptno) include (sal) (include on)
+- ex 2 : create index emp_x ont emp(deptno,sal)(include off)
+
+만약에 
+select * from emp where deptno = 20 and sal >=2000
+select * from emp where deptno = 20 and sal between 2000 and 3000
+이런 sql문을 생각해보면 
+결국 ex2는 인덱스 소트 연산이 생략 가능하지만 ex1은 인덱스를 생략하지 못한다.
+
+so. include인덱스는 온전히 랜덤 액세스를 줄이는 용도로 개발되어졌다.
+
+p153.
+# 인덱스 구조 테이블
+ 테이블 액세스가 고비용 구조기 때문에 랜덤 액세스가 발생하지 않도록 인덱스 구조를 생성하면?
+ 
+ IOT(oracle),클러스터형인덱스(sql-server)
+
+IOT 클러스터형인덱스
+- ROWID를 갖는 일반 인덱스와 달리 그자리에서 테이블 데이터를 갖는다.
+- 데이터 블록에 있어야 할 데이터를 그냥 인덱스 리프 블록에 모두 저장하는구조
+
+ex
+  일반 테이블: 김금영 rowin --> 김금영 남 7500 (인덱스 블록 --> 데이터 블록 : 독립적)
+  인덱스 구조 테이블: 김금영 남 7500 (인덱스 리프 블록에 모두 저장)
+
+테이블을 IOT구조로 만드는 구문예시
+  create table index_org_t ( a number,  b varcher(10), constraint index_org_t_pk primary ket(a))
+  organization index; (이렇게 인덱스구조 테이블 옵션 명시)
+
+왜 인덱스 구조 테이블을 사용할까?
+- 일반적인 테이블인 힙 구조 테이블은 데이터를 입력할때 랜덤방식 사용(freelist)
+- 인덱스 구조 테이블은 랜덤이 아니라 정렬상태를 유지하며 데이터 입력 
+- 즉 인덱스 구조테이블은 인위적으로 클러스터 팩터링(CF)를 좋게 만드는 방법 중 하나
+
+- 클러스터팩터링이 좋으면 BETWEEN이나 부등호 연산시 넓은범위를 읽을때 좋은 성능을 발휘하는데
+- 인덱스 구조 테이블을 통해 넓은 범위를 읽을떄 좋은 성능을 발휘한다.
+
+- 데이터 입력이나 조회 패턴이 서로 다른 테이블에서도 유용.
+ex: 
+select substr(일자, 1, 6)월도, sum(판매금액) 총 판매금액 , avg(판매금액) 평균판매금액
+from 영업실적
+where 사번 = 's1234' and 일자 between '20180101' and '20181231'
+group by substr(일자,1,6)
+해당 쿼리에 인덱스를 사용한다면 사원마다 랜덤액세스 형식으로 365개의 테이블 블록을 읽어옴
+
+so. 랜덤액세스형식 이므로 클러스터 팩터링이 안좋다면 많은 블록 I/O가 발생한다.
+즉 한블록에 100개의 레코드가 저장된다면
+랜덤액세스는 365개의 블록을 전부 읽어야 하지만 인덱스 구조 테이블 사용시
+단 4개의 블록만 읽으면 된다.
+
+#클러스터 테이블
+-인덱스 클러스터 테이블
+-해시 클러스터 테이블
+
+인덱스 클러스터 테이블
+- 클러스터 키의 값이 같은 레코드들을 한 블록에 모아서 저장하는 구조
+- 다중 클러스터 테이블 : 하나의 데이터 블록에 여러테이블 레코드를 저장
+ex.
+cluster key : deptno
+블록 1
+deptno: 10
+7839 KING PRESIDENT 5000
+7782 CLARK MANAGER 7839 2450
+7934 MILLER CLERK 7782 1300
+블록 2
+deptno: 20
+7788 SCOTT ANALYST 3000
+7902 FORD ANALYST 3000
+7566 JONES MANAGER 2975
+7876 ADAMS CLERK 1100
+
+인덱스 클러스터 구문 예시
+1. 클러스터 생성
+create cluster c_dept# (deptno number(2)) index;
+2. 인덱스 생성
+create index c_dept#_idx on cluster c_dept# 
+-> 클러스터 인덱스를 반드시 정의해야함. 인덱스는 검색 뿐만아니라 저장할때도 사용하기 때문
+3. 클러스터 테이블 생성
+create table dept(
+   deptno number(2) not null,
+   dname varcher(14) not null,
+   loc varcher(13))
+   cluster c_dept#(deptno);
+
+
+해시 클러스터 테이블
+- 해시 클러스터는 인덱스를 사용하지 않고 해시 알고리즘을 사용해 클러스터를 찾아가는점만 다르다.
+
+해시 클러스터 테이블 구문
+1.클러스터 생성
+create cluster c_dept# (dept number(2)) hashkeys 4;
+2. 클러스터 테이블 생성
+create table dept(
+   deptno number(2) not null,
+   dname varcher2(14) not null,
+   loc varchar2(13))
+   cluster c_dept#(deptno);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
