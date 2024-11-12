@@ -58,7 +58,8 @@ int main() {
         fgets(buffer, sizeof(buffer), stdin);
         buffer[strcspn(buffer, "\n")] = '\0';
 
-        if (write(write_fd, buffer, strlen(buffer) + 1) == -1) {
+        if (write(write_fd, buffer, strlen(buffer) + 1) == -1)
+         {
             perror("write to server_to_client_fifo");
             exit(1);
         }
