@@ -108,6 +108,7 @@ WHERE ENAME > 20;
 CREATE index t_01 on t (deptno, no);
 -- -> t테이블의 deptno, no의 컬럼을 인덱스생성하고, 그 이름을 t_01이라고 설정
 
+-- NVL/DECODE함수의 활용
 
 
 

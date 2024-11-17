@@ -281,6 +281,41 @@ and 판매구분 = 'a'
 2에서는 20190101 a에서 20191231 b 까지 스캔을 한다
 즉 2에서는 스캔범위 밖인 20191231 b 까지 비효율적이 스캔을 한다. 
 
+성능 최적화를 위한 NVL/DECODE 함수 활용
+NVL과 DECODE함수를 이용하면 옵선조건을 인덱스 액세스 조건으로 활용하여 쿼리 성능 최적화가 가능합니다.
+
+예를들어
+SELECT * FROM 거래
+WHERE 고객ID = NVL(:cust_id, 고객ID)
+AND 거래일자 BETWEEN :dt1 AND :dt2;
+
+일단 먼저 NVL함수가 어떤 역활을 하는지 알아보면
+column = NVL(A,B) -> 해당 column이 NULL값이라면 A를 반환 NULL이 아니라면 B를 반환합니다.
+
+그럼 위의 쿼리문을 자세히 보면 cust_id의 값이 NULL이라면 고객ID = 고객ID가 되어서 전체 고객이 선택되어지고,
+NULL이 아니라면 특정고객을 조회합니다.
+
+이와 비슷하게 DECODE에서의 예시를 살펴봅시다.
+
+SELECT * FROM 거래
+WHERE 고객ID = DECODE(:cust_id,NULL,고객ID,:cust_id)
+AND 거래일자 BETWEEN :dt1 AND :dt2;
+
+DECODE함수에 대해서 알아보면 
+DECODE(A,B,C,D) -> 만약 A가 B라면 C를 반환하고 아니면 D를 반환한다.
+
+즉 예시 쿼리에서 DECODE는 :cust_id 가 NULL이면 고객ID = 고객ID를 반환하고 , NULL이 아니라면 특정고객을 조회합니다.
+
+위 두가지의 예시쿼리는 같은 기능을 수행한다는것을 알 수 있습니다.
+이렇게 NVL/DECODE를 이용하여 조건에 따라 조회범위를 다르게 함으로써 옵션조건을 효율적으로 활용하고,
+불필요한 테이블 스캔을 줄여 쿼리 성능을 최적화 할 수 있습니다.
+
+NVL/DECODE를 이용하여 성능 최적화시 주의사항
+만약 옵션 조건 컬럼이 NULL을 허용하는 컬럼이라면 SQL의 특성(NULL은 비교연산을 수행안함)상 NULL처리를 못할 수 있습니다.
+즉 NULL조건은 참이 되어지지 않기 때문에 조건절에서 NULL처리를 주의해야합니다.
+
+
+
 
 
 
