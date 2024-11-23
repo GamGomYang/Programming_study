@@ -1,0 +1,2 @@
+gam         38    37  0 14:11 pts/0    00:00:00 sh -c ps -ef| grep sshd > sshd.txt
+gam         40    38  0 14:11 pts/0    00:00:00 grep sshd
