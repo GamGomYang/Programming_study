@@ -1,20 +1,26 @@
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main() {
     int port;
-    printf("Enter port number: ");
+    struct servent *service;
+
+    printf("Input port number : ");
     scanf("%d", &port);
 
-    struct servent *service = getservbyport(htons(port), "tcp");
-    if (service) {
-        printf("Service name: %s, port= %d\n", service->s_name, port);
+    uint16_t network_port = htons(port);
 
+    service = getservbyport(network_port, "tcp");
+    if (service) {
+
+        printf("Name=%s, Port=%d\n", service->s_name, ntohs(network_port));
     } else {
-        printf("No service found for port %d\n", port);
+        printf("Service not found for port=%d\n", port);
     }
 
-        return 0;
+    return 0;
 }

@@ -45,8 +45,8 @@ int main() {
 
     printf("* Client connected!!\n");
     while (1) {
-        if (send(ns, buf, sizeof(buf), 0) == -1) {
-            perror("send");
+        if (recv(ns, buf, sizeof(buf), 0) == -1) {
+            perror("recv");
             exit(1);
         }
         printf("** Client message : %s\n", buf);
@@ -57,8 +57,8 @@ int main() {
             sprintf(buf, "%s", msg[ind]);
         } else
             sprintf(buf, "Bye!!");
-        if (recv(ns, buf, strlen(buf) + 1, 0) == -1) {
-            perror("recv");
+        if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
+            perror("send");
             exit(1);
         }
         if (!strcmp(buf, "Bye!!"))
