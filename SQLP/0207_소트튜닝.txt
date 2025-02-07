@@ -1,0 +1,192 @@
+소트 조인
+
+소트는 PGA에서 할당한 sort area에서 발생
+
+
+-sort 
+1. 메모리 소트(internal sort)
+2. 디스크 소트(external sort)
+
+
+-소트 오퍼레이션 (실행계획창에서 나오는 것들)
+sort aggregate - sort area를 사용한다는 의미로 이해
+sort order by - 데이터를 정렬할떄마다 나타남
+sort group by - 소팅 알고리즘을 사용해 그룹별 집계 수행
+hash group by - 해시 알고리즘을 사용하여 소팅 처리
+
+
+-Group by는 정렬을 보장하지 않는다.
+sort group by를 사용해도 정렬이 되어지지않는다.
+반드시 order by가 필요하다.
+
+
+union minus distinct -> 중복제거를 하기위해 소트연산발생
+-> 성능이 느려짐 소트연산을 피할 방법을 찾아봐야함
+
+
+union, union all
+
+union all - 중복을 확인하지 않음
+union - 중복 제거 작업을 위해서 소트연산 시행
+
+서로 포함되어지지 않는 독립적인 관계에서는 중복성 체크가 필요가 없다.
+하지만 union연산을 수행하면 불필요한 소트 연산이 사용되어진다.
+그러므로 서로 상호 배타적인 인스턴스라면 union all을 사용하는것이 성능 측면에서 좋다.
+
+select 결제번호, 결제수단코드, 주문번호, 결제금액, 결제일자, 주문일자 …
+from 결 제
+where 결제일자 = '20180316'
+UNION
+select 결제번호, 결제수단코드, 주문번호, 결제금액, 결제일자, 주문일자 …
+from 결 제
+where 주문일자 = '20180316'
+
+이렇게 union 연산을 하면 
+결재일자와 주문일자가 동일한 인스턴스들은 중복되어져서 나타난다.
+그래서 union 연산을 통해서 인스턴스의 중복을 제거 하려고 했으나.
+소트연산으로 인해서 비용이 커졌다.
+
+어떻게 하면 소트연산을 줄이며 할 수 있을까?
+
+select 결제번호, 결제수단코드, 주문번호, 결제금액, 결제일자, 주문일자 …
+from 결제
+where 결제일자 = '20180316'
+UNION ALL
+select 결제번호, 결제수단코드, 주문번호, 결제금액, 결제일자, 주문일자 …
+from 결제
+where 주문일자 = '20180316'
+and 결제일자 <>'20180316'
+
+이렇게 <>를 추가해서 결재일자가 동일한 인스턴스를 제거하면된다.
+
+하지만 <> 은 NULL 조차 제거해버리는 단점이 있는데
+이때 LNNVL함수를 사용하여 NULL 제거를 방지 할 수 있다.
+
+<> : 해당 조건 제거
+LNNVL : 해당조건 제거 + NULL 제거 방지
+
+
+-distinct, minus 보단 exist not exist 사용하기
+
+distinct는 중복된 인스턴스를 제거하는 연산을 하는데
+모든 데이터를 가져와서 중복 제거 수행 -> 속도가 굉장히 느리다.
+
+exists를 사용하면 데이터가 존제하는 순간 연산이 종료되어지기 때문에 훨신더 빨라진다.
+
+SELECT DISTINCT p.상품번호, p.상품명, p.상품가격
+FROM 상품 p, 계약 c
+WHERE p.상품유형코드 = :pclscd
+AND c.상품번호 = p.상품번호
+AND c.계약일자 BETWEEN :dt1 AND :dt2
+AND c.계약구분코드 = :ctpcd;
+
+이러한 쿼리가 있다고 하면 
+만약 계약이 100개가 있다고 하면 동일한 상품번호를 가진 계약 100개를 전부 탐색하기 때문에
+성능 측면에서 굉장히 느려진다.
+
+exists를 이용하면 해당 인스턴스 하나를 발견하면 바로 종료하기때문에 훨씬 빨라진다.
+
+쿼리를 고쳐보면
+
+SELECT p.상품번호, p.상품명, p.상품가격
+FROM 상품 p
+WHERE p.상품유형코드 = :pclscd
+AND EXISTS (
+    SELECT 1  (1개가 아니라 데이터의 존재유무 판단을 위해 1 사용 (있으면 TRUE 없으면 FALSE 반환))
+    FROM 계약 c
+    WHERE c.상품번호 = p.상품번호
+    AND c.계약일자 BETWEEN :dt1 AND :dt2
+    AND c.계약구분코드 = : ctpcd
+);
+
+이렇게 exists 서브쿼리를 이용하면 해당 조건 하나를 찾으면 바로 종료한다.
+
+-MINUS 연산
+minus연산 또한 소트작업을 통해 모든 테이블을 정렬후 차이를 계산하기 때문에 속도가 느려진다.
+minus연산 대신 not exists연산을 통해 소트과정을 하지말고 존재여부만 확인한다.
+
+(예: 상황접수 중 출동상황 없는 경우를 찾기)
+SELECT ST.상황접수번호, ST.관제일련번호, ST.상황코드, ST.관제일시
+FROM 관제진행상황 ST
+WHERE 상황코드 = '0001' -- 신고접수
+AND 관제일시 BETWEEN :V_TIMEFROM || '000000' AND :V_TIMETO || '235959'
+MINUS
+SELECT ST.상황접수번호, ST.관제일련번호, ST.상황코드, ST.관제일시
+FROM 관제진행상황 ST, 구조활동 RPT
+WHERE 상황코드 = '0001'
+AND 관제일시 BETWEEN :V_TIMEFROM || '000000' AND :V_TIMETO || '235959'
+AND RPT.출동센터ID = :V_CNTR_ID
+AND ST.상황접수번호 = RPT.상황접수번호
+ORDER BY 상황접수번호, 관제일시;
+
+-> 모든 테이블을 소트후 찾는다. (고비용)
+
+
+<튜닝 후>
+SELECT ST.상황접수번호, ST.관제일련번호, ST.상황코드, ST.관제일시
+FROM 관제진행상황 ST
+WHERE 상황코드 = '0001' - 신고접수
+AND 관제일시 BETWEEN :VJIMEFR에 ! | '000000' AND ：V_TIMETO 11 '235959'
+AND NOT EXISTS （SELECT 'X' FROM 구조활동
+WHERE 출동센테D = ：V_CNTR_ID
+AND 상황접수번호 = ST.상황접수번호）
+ORDER BY ST.상황접수번호, ST.관제일시
+
+-> NOT EXISTS 연산을 통해 해당 신고후 출동 인스턴스가 존재하지 않는다면?
+-> 출동기록이 존재하지 않는다면? 바로 출력후 끝 (저비용) 
+
+
+-조인 방식 변경으로 소트연산 줄이기
+
+지점 ID + 계약일시로 이루어진 인덱스를 이용해서
+해당 쿼리를 실행하면 해시 조인으로 인해서 불필요한 소트과정이 생성되어진다.
+
+select c.계약번호, c.상품코드, p.상품명, p.상품구분코드, c.계약일시, c.계약금액
+from 계약 c, 상품 p
+where c.지점ID = :brch_id
+and p. 상품코드 = c.상품코드
+order by c.계약일시 desc
+
+
+Execution Plan
+0 SELECT STATEMENT Optimizer=ALL_ROWS
+1 0 SORT (ORDER BY)
+2 1 HASH JOIN
+3 2 TABLE ACCESS (FULL) OF ‘상품, (TABLE)
+4 2 TABLE ACCESS (BY INDEX ROWID) OF ■계약' (TABLE)
+5 4 INDEX (RANGE SCAN) OF '계약_X01‘ (INDEX)
+
+해시조인은 빠른 조인 작업을 수행함으로써 대량의 데이터 조인시 적합한 조인이지만
+해시조인은 정렬을 보장하지 않기 떄문에 별도 정렬(소트작업)이 필요하다.
+
+NL 조인을 사용하면 인덱스를 활용하여 정렬된 데이터를 가져올 수 있으므로 소트 연산을 생략할 수 있다.
+SELECT /*+ LEADING(c) USE_NL(p) */
+c.계약번호, c.상품코드, p.상품명, p.상품구분코드, c.계약일시, c.계약금액
+FROM 계약 c, 상품 p
+WHERE c.지점ID = :brch_id
+AND p.상품코드 = c.상품코드
+ORDER BY c.계약일시 DESC;
+0 SELECT STATEMENT Optimizer=ALL_ROWS
+
+1 0 NESTED LOOPS
+2 1 NESTED LOOPS
+3 2 TABLE ACCESS (BY INDEX ROWID) OF '계약' (TABLE)
+4 3 INDEX (RANGE SCAN DESCENDING) OF '계약_X01' (INDEX)  --  정렬 필요 없음!
+5 2 INDEX (UNIQUE SCAN) OF '상품_PK' (INDEX (UNIQUE))
+6 1 TABLE ACCESS (BY INDEX ROWID) OF '상품' (TABLE)
+
+NL조인을 사용하면 인덱스에서 이미 정렬된 데이터를 가져올 수 있기 때문에
+소트 연산이 필요하지 않다.
+
+`Sort Merge Join`은 조인 키 기준으로 정렬된 데이터라면 정렬 연산을 생략할 수 있지만, 정렬되지 않은 경우 `SORT` 연산이 발생할 수도 있다.
+SELECT /*+ USE_MERGE(c p) */
+c.계약번호, c.상품코드, p.상품명, p.상품구분코드, c.계약일시, c.계약금액
+FROM 계약 c, 상품 p
+WHERE c.지점ID = :brch_id
+AND p.상품코드 = c.상품코드
+ORDER BY c.계약일시 DESC;
+
+소트 머지 조인 또한 인덱스에서 정렬된 데이터를 가져오기때문에 소트연산 불필요
+
+
+5.3 인덱스를 이용한 소트연산 생략
