@@ -1,0 +1,15 @@
+-0209
+which - 앞에온 명사를 수식할때 사용한다.
+필수적이지 않지만 부가적인 설명을 하고 싶으면
+,(콤마) + which 를 사용하면 된다.
+
+ex:
+Mordern watches have an 'X' mark on the dial, which i don't like.
+so i prefer vintage watches
+
+1. x마크 설명을 위해 ,which사용
+2. like 대신 prefer를 사용했음. -> like 는 그냥 좋아할때 prefer는 둘 중에 하나를 좋아할때
+
++ which 는 추가적으로 선택지를 제시할때도 사용
+which vintage watch brands do you like besides seiko?
+
