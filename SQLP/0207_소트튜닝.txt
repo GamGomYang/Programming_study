@@ -196,3 +196,62 @@ ORDER BY c.계약일시 DESC;
 
 **stopkey: 실행계획에서 지정된 개수만큼 가져오고 난 후 추가 조회를 멈추는 최적화 기법
 -> 특정 개수 n개 (top n)를 조회하고 즉시종료한다는 뜻
+
+
+-0211
+
+first row stopkey 방식 이해
+
+SELECT /*+ INDEX_DESC(상태변경이력_pk)*/
+변경일자 || LPAD(변경순번 , 4)|| 상태코드 
+FROM 상태변경이력 
+WHKERE 장비번호 = P.장비번호
+AND ROWNUM <=1;
+
+최신 데이터를 먼저 읽고 1개만 가져오고 멈춘다.
+(first row stopkey 방식)
+
+
+top n query 알고리즘 
+원래 top n query는 해당하는 범위의 인스턴스들을 들고오는것
+최근 데이터 1건만 가져오려면 desc 후 조건절에 rownum <= 1 하면된다.
+
+top n query 알고리즘 
+1. 최신 1건 조회 알고리즘
+
+SELECT 변경일자 , 변경순번 , 상태코드
+FROM 상태변경이력
+WHERE 장비번호 = 'A001'
+ORDER BY 변경일자 DESC , 변경순번 DESC
+FETCH FIRST 1 ROW ONLY
+
+
+5.3.5 인덱스를 이용한 SORT GROUP BY 생략
+
+
+인덱스를 이용해서 소트연산을 생략할수 있기도 하지만
+인덱스를 이용해서 SORT GROUP BY연산도 생략할수있다.
+
+오퍼레이션에서 SORT GROUP BY NOSORT부분이 해당 부분이다.
+
+SORT GROUP BY NOSORT는 인덱스를 이용하여 GROUP BY 의 SORT를 생략했다.
+
+
+5.4 sort area를 적게 사용하여 sql작성
+
+왜 인라인 뷰로 묶은 쿼리가 소트AREA를 덜 사용할까?
+
+SQL의 쿼리 실행순서
+FORM/JOIN - WHERE - GROUP BY - HAVING - SLELCT - ORDER BY - LIMIT
+** 항상 쿼리 실행순서를 인지한 상태에서 비용생각을 해보자.
+
+
+-sql 트레이스 해석방법
+cr - 논리적 읽기 횟수
+pr - 물리적 읽기 횟수
+pw - 물리적 쓰기 횟수
+-> cr이 크면 메모리에서 많은 데이터를 읽었고, pr이 크면 디스크 I/O비용이 높다.
+
+
+- 분석함수(rank, row number)에서의 Top N 소트
+max보다 rank함수를 이용하면 비용이 줄어든다
