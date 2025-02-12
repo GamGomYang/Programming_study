@@ -70,7 +70,7 @@ recover (reco) : 분산 트랜잭션 과정에 발생한 문제를 해결
 6. redo 로그 설명
  redo로그 - 데이터 베이스 변경사항을 기록하는 파일. 데이터 복구 가능
  1. database recovery ( = media recovery)
-    - 디스크가 손상되거나 데이터가 사라졌을떄 , archived redo 로그를 이용해 복구
+    - 디스크가 손상되거나 데이터가 사라졌을때 , archived redo 로그를 이용해 복구
     - 만약 디스크가 고장났다면 redo로그를 아카이빙 해둔 파일이 있다면 db복구 가능
     - 이렇게 아카이빙 redo 로그를 이용하는것을 media recovery라고 한다.
 
