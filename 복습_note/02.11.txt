@@ -1,0 +1,88 @@
+first row stopkey
+
+SELECT /*+ INDEX_DESC(상태변경이력_PK)*/
+변경일자 || LPAD(변경순번, 4)||상태코드 
+FROM 상태변경이력 
+WHERE 장비번호 = p.장비번호
+AND ROWNUM <=1;
+
+first row stopkey: 최신데이터를 먼저 읽고 1 개 발견시 즉시 멈춘다.
+
+top n query 알고리즘
+원래 top n query는 해당하는 범위의 인스턴스들을 들고오는것
+first row stopkey처럼 1개만 찾으려면 desc조건후 조건절에 rownum <= 1 하면된다.
+
+top n query 알고리즘 파악하기
+SELECT 변경일자 , 변경순번 , 상태코드
+FROM 상태변경이력
+WHERE 장비번호 = 'A001'
+ORDER BY 변경일자 DESC , 변경순번 DESC
+FETCH FIRSY 1 ROW ONLY
+
+
+-인덱스를 이용해서 sort group by 생략 해보기
+
+인덱스를 이용하면 소트연산을 생략할 수 있다.
+-> 인덱스를 이용해서 sort group by 연산도 생략할 수 있다.
+
+오퍼레이션에서 sort group by nosort는 인덱스를 이용하여 group by의 sort를 생략했다.
+
+- sort area를 적게 사용하여 sql작성법
+왜 인라인 뷰로 묶은 쿼리가 소트area를 덜 사용할까?
+
+sql의 쿼리 실행순서
+
+from/join- where- goup by - having - select - orderby
+
+- sql 트레이스 해석방법
+cr - 논리적 읽기 횟수
+pr - 물리적 읽기 횟수
+pw - 물리적 쓰기 횟수
+-> cr이 크면 메모리에서 많은 데이터를 읽었고, pr이 크다면 디스크 i/o 비용이 높다.
+
+-분석함수 (rank, rownumber)에서의 top n  sort
+스칼라 서브쿼리 - 단일 값을 반환하는 쿼리.
+만약에 서브쿼리의 결과가 한개의 행과 한개의 열만 포함할때 select 절 뿐만아니라 where having절 등에서 사용할 수 있음.
+
+
+-기본 DML튜닝
+
+소량의 데이터는 버퍼캐시를 이용하면 빠르게 검색이 가능 하지만
+대량의 데이터는 오히려 버퍼캐시를 이용하면 검색 속도가 느려짐
+
+즉 대량의 데이터는 index range scan비용이 더 클수 있다.
+
+그러니 데이터의 크기를 보고 buffer chach 가 좋을지 disk io가 좋을지 고민해보아야한다.
+
+테이블 파티션
+1. range 파티션
+2. list 파티션
+3. hash 파티션
+
+range 파티션 - 시계열과 같은 연속적인 데이터를 파티셔닝
+list 파티션 - 특정 리스트 값을 기준으로 데이터 파티셔닝 
+hash 파티션 - 오라클에서 지원하는 해시 함수 알고리즘에 따라 임의로 분할
+
+인덱스 파티션
+1. 로컬 인덱스 파티션
+2. 글로벌 인덱스 파티션
+3. 비  파티션 인덱스
+
+1. 로컬 인덱스 파티션
+테이블 파티션과 정확하게 1:1로 매칭이 되는 인덱스
+오라클이 자동으로 관리함
+2. 글로벌 인덱스 파티션
+사용자가 테이블 파티션과 관계없이 독립적으로 인덱스를 구성할 수 있음
+테이블 파티션이 변경되어도 인덱스는 영향을 받지 않는다.
+
+3. 비 파티션 인덱스
+우리가 흔히 아는 일반적인 인덱스
+
+
+- git 에서 revert 와 reset의 차이
+
+revert : 이전 버전을 유지한 채 커밋을 되돌리는것
+reset : 지정한 커밋기준으로 히스토리 변경
+
+
+
