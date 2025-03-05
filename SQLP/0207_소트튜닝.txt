@@ -225,9 +225,7 @@ WHERE 장비번호 = 'A001'
 ORDER BY 변경일자 DESC , 변경순번 DESC
 FETCH FIRST 1 ROW ONLY
 
-
 5.3.5 인덱스를 이용한 SORT GROUP BY 생략
-
 
 인덱스를 이용해서 소트연산을 생략할수 있기도 하지만
 인덱스를 이용해서 SORT GROUP BY연산도 생략할수있다.
