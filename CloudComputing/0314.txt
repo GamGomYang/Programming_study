@@ -1,0 +1,12 @@
+클라우드 컴퓨팅
+
+virtualization hypervisor
+
+하이퍼 바이저
+- 하이퍼 바이저 개요 다시 보기
+  type1 type2 이렇게 있음
+  native hosted 방식
+  
+  완전 가상화 FULL virtualization
+  
+
