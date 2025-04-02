@@ -10,10 +10,12 @@ void reverseArray(T *arr, int size) {
     }
 }
 
+// 문자열도 스왑하는 함수가 필요하다ㅣ.
+
 int main() {
     int x[] = {1, 10, 100, 5, 4};
     reverseArray(x, 5);
     for (int i = 0; i < 5; i++)
-        cout << x[i] << ' '; // 출력: 4 5 100 10 1
+        cout << x[i] << ' ';
     cout << endl;
 }
