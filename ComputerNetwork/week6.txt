@@ -1,0 +1,27 @@
+CRC Process
+ Modulo 2 arithmetic
+ Uses binary addition with no
+carries
+ Polynomials
+ Express all values as polynomials
+in a dummy variable X, with binary
+coefficients
+ Coefficients correspond to the bits
+in the binary number
+ Digital logic
+ Dividing circuit consisting of XOR
+gates and a shift register
+ Shift register is a string of 1-bit
+storage devices
+ Each device has an output line,
+which indicates the value currently
+stored, and an input line
+ At discrete time instants, known
+as clock times, the value in the
+storage device is replaced by the
+value indicated by its input line
+ The entire register is clocked
+simultaneously, causing a 1-bit
+shift along the entire register
+
+13페이지 중요
