@@ -1,4 +1,4 @@
--0209
+
 which - 앞에온 명사를 수식할때 사용한다.
 필수적이지 않지만 부가적인 설명을 하고 싶으면
 ,(콤마) + which 를 사용하면 된다.
@@ -13,7 +13,7 @@ so i prefer vintage watches
 + which 는 추가적으로 선택지를 제시할때도 사용
 which vintage watch brands do you like besides seiko?
 
--0210
+
 
 craving - 갈망하다.
 
@@ -63,5 +63,21 @@ they provide a happy and i can a greate experience.
 playing games and watching movies provied happiness and i can have a great experience.
 
 
--03.06
+mastermind 입안자
+negative 부정적인
+economical 경제적인
+boost 부양시키다
+policy 규정
+professional 전문적인
+evenly균등하게
+accquaint 숙지시키다.
+exclusive 독점적인
+assignmnet 일
+habit 습관
+lend 빌려주다
+customer 고객
+assert 단언하다 주장하다.
+soar 폭등하다.
+thrive 번영하다
+drastically 심하게 과감하게
 
