@@ -230,3 +230,158 @@ acknowledged connectionless service
 
 
 
+3G 와 4G의 차이 
+3G는 회선기반이지만 4G 에서는 IP 패킷으로 처리함
+
+3g에서는 cdma를 이용하여 같은 주파수 대역을 동시에 쓰게해준다.
+멀티레이트 - 하나의 사용자에게 다양한 속도 채널 제공가능
+
+4g 에서는 carrier aggregation을 통해 더 넓은 대역폭을 확보해줌
+
+버스 토폴로지는 양방향 전송
+스타 토폴로지는 점대점 전송
+
+
+
+
+rip ospf 
+
+llc pdu 전송 
+unack cont conit ser ack cont
+
+rr reser contetion 
+
+bridge sappning 트리 
+
+spanning tree router 
+ip design 
+
+fixed routing
+
+spanning tree
+frame fowarding adress learning loop resolution
+
+vlan 물리적 위치 제한 vlan 끼리 같은 브로드 캐스트
+브로드 캐스트 이게 vlan에서 가장 중요한거임
+
+csma 의 종규 cd 에서는 1-p p-p non - p 
+
+ca 에서는 dcf 가 있는뎅 sifs pifs difs 이렇게 있다..
+
+mac - reliable data 
+access control security
+
+4 frame exchange - > hidden node 해결
+
+ip 에서 icmp는 control 알림기능
+
+vpn은 공공인터넷에서도 암호와 및 특수 프로토콜을 통해 안전하게 접근
+
+ipsec은 ah esp key exchange 
+
+icp ip는 응용 인터넷 네트워크 계층
+
+routing fixed routing
+
+class a b c d 
+
+127 128 191 192  1 10 110 이렇게 간다.
+
+
+
+tcp 프로토콜에서 오류제어
+
+흐름제어 오류제어 혼잡제어 이렇게 있다.
+
+흐름제어는 송신자와 수신자간의 데이터 전송속도 조절 수신자의 버퍼가 가득차 overflow를 방지
+혼잡제어 네트워크 내 혼잡도를 감지 하고 이를 완화하여 데이터 전송 효율성을 극대화
+
+슬라이딩 윈도우 메커니즘 흐름 제어 혼잡제어를 결합하여 데이터 전송속도 조절
+슬라이딩 윈도우 제어 -> 전송속도 조절
+
+수신측 흐름 제어 위한 윈도우 16 혼잡 16
+
+송신측 미니멈 즉 16개임
+
+분산 네트워크의 경쟁 방식 매체 접속 제어를 위해 contetion window 
+
+데이터 전송장치가 충돌을 피하기 위해 기다려야하는 시간간격
+충돌량이 많을 수록 contention window 의 간격이 증가한다.
+
+fdd tdd
+
+충돌이 감소하고 네트워크 효율성과 안전성이 향상되어서 전반적인 성능이 좋아진다.
+
+mimo : 다중 안테나 시스템으로 송신측 수신측에 여러 안테나를 사용하여 데이터 전송속도와 용량을 증가시킨다.
+
+다중경로를 사용하여 데이터를 병렬로 전송
+
+csma 1- p p-p non -p 이렇게 3개가 있다.
+
+cd 를 방지 
+
+즉 이렇게 해야함 1-p p-p non-p 이순서대로 접근
+
+idle 상태일때 데이터 전송
+데이터 전송때 사용되어지는 것
+
+
+dcf ac ifs sifs pifs difs
+
+이렇게 우선순위를 준다.
+
+
+packet aggregation 
+
+circuit switching 물리적 경로를 설정하여 독점적으로 path를 사용
+
+datagram은 path 가 설정되는데 시간이 걸린다. 아니다 그냥 조진다.
+
+virtual circuit dms 논리적 path를 통해 순서대로 전성한다.
+
+
+전송지연시간 패킷이 크기가 클수록 전송 지연시간이 크다.
+
+전송지연시간 패킷의 크기가 클수록 전송지연시간이 크다.
+
+
+작은 cell은 더 많은 기지국을 배치하여 traffic을 분산 시킬수 있다.
+전파경로의 장애물을 줄여 신호가 개선된다.
+
+주파수를 재활용해서 반복적으로 사용하여 주파수 효율을 높인다.
+반복적으로 사용해서 주파수 효율 상승
+
+처리할 수 있는 데이터 양 늘어난다.
+
+빔포밍 기술은 신호감쇄를 줄인다.
+
+osi 7계층 응용 표현 세션 전송 네트워크 데이터 물리
+응 표 세전 네데물 응용 표현 세션 전송 네트워크 데이터링크 물리
+
+layer의 장점 독립화하여 문제 해결 및 관리 용이
+
+
+전송 프로토콜
+
+순차적으로 배달 재전송 중복 감지 연결 설정 연결 종료이런거
+믿을 수 없으니까 믿게 만들어야지 tcp야 그러니까 믿게 만들도록
+
+
+즉 순차적으로 해줌
+
+
+
+
+bridge routing switch 
+
+switch 2layer switch 이건
+bridge에서한프레임에서 한개인데 여러프레임에 여러번 이동이 가능하다.
+
+2layer switch 에 뭐가 있을까??
+store and foword cut through
+
+수신하자마자 전송
+
+vlan 물리적 위치 제한 vlan끼리 같은 브로드 케스트
+
+
