@@ -10,4 +10,169 @@ cnn 에서 풀링이란?
 
 가중치 공유(같은 가중치를 쓰는것) , 풀링 덕분에 사물의 위치가 달라도 잘 인식한다.
 
+cnn에서 fully connected는 마지막에 다끝난걸 결합하는 역할을 하는거 같음
+
+커널은 필터이다
+컨볼루션 뜻이 합성곱이구나 결국 합성곱 즉 컨볼루션은
+임력이미지와 커널(필터)를 곱하고 합을 계산하는 연산
+그 결과 특징맵 feature map이 생성되어진다.
+
+cnn의 연산과정
+입력이미지 필터 슬라이딩 각위치별로 곱하기 그리고 출력 (특징 맵)
+
+
+padding 이란 만약에 출력 특징맵이 작이지면 추가적으로 가장자리에 패딩값을 추가하여
+출력사이즈 유지 및 정보 보존 목적
+
+바이어스 (편향)
+각 필터 결과에 더해지는 학습 가능한 상수 값
+출력 값 조정 비선형성을 도입하여 더 유연한 표현 가능
+
+
+weight sharing 가중치 공유
+입력 크기가 서로 달라도 특정 커널만 학습하면 된다.
+파라미터 수 감소 학습 효율 증가 같은 특징을 다른위치에서도 인식가능
+일반화 성능 향상
+
+음 웨잇 셰어링을 통해서 파라미터 수를 감소 시키고 학습효율을 증가가능
+그리고 특징인식을 다른위치에서도 인식이 가능하다.
+
+여러 커널 = 여러 특징 맵
+하나는 수직선 다른 하나는 수평선 감지 여러개의 특징을 감지
+
+cnn에서는 커널을 수동으로 만들지 않는다.
+처음에는 랜덤으로 초기화하고 그뒤 bp 학습을 통해 자동으로 최적화
+
+extract multiple feature maps via multiple kernels
+
+스트라이드 크기가 크면 만약에 stride =2 라면 1/k^2만큼 줄어든다.
+
+풀링 - 특징 맵의 차원을 줄이면서도 핵심정보는 유지하는 연산.
+계산량 감소 , 파라미터 수 감소(오버피팅 방지), 더 높은 추상화 수준의 표현가능
+
+
+
+lenet : 손글씨 숫자 인식에서 높은 성능 발휘
+
+mlp와 cnn의차이점
+cnn은 고정된 크기가 아니라 다양한 크기의 이미지를 입력받고 유연적으로 stride pooling으로 조절가능
+특징 추출을bp를 통해 자동으로 학습.
+
+cnn의 활용분야
+이미지 분류 객체위치 추정 객체 탐지 이미지 캡셔닝
+
+alexnet : 8개의 레이어 5개의 컨볼루션 3개의 fully connected 
+gpu를 사용하여 학습시간 단축, 오버피팅을 방지하기 위해 드롭아웃 사용
+
+VGGNET : alexnet 보다 2~3배 깊은 네트워크 13개의 컨볼루션 3개의 fully connected
+커널은 오직 3*3의 고정 크기만 사용 - 커널은 작고 네트워크는 깊게 처리
+3*3커널을 연속적으로 사용하면 정확도가 상승할 수 있다. 비선형성 도입
+
+
+1*1 커널의 활용 : 차원축소에 사용가능 추가적인 비선형성 도입(relu): 모델의 표현력강화
+
+
+googlenet : nn(network inn network) 기반
+기존의 단순 conv - relu - pooling 대신
+mlpconv레이어 사용 - 작은 mlp들을 conv처럼 이동시키며 처리
+
+inception module 하나의 레이어에서 다양한 커널을 동시에 적용하며 다양한 크기의 특징을 추출
+googlenet은 9개의 incetion module 과 fully connected layer는 1개뿐 하지만 golobal average pooling사용
+
+
+resnet
+딥러닝에서 층이 너무 깊어지면 오히려 성능이 저하되어지는 문제 발생 (degradation problem)
+solution : residual lerning(잔차학습)
+네트워크가 길어도 학습이 잘되어진다. 기울기 소실문제 완화, 성능 저하 없이 깊은 네트워크 구성가능
+vggnet 과 비슷하게 3*3 커널을 이용하지만 residual learning , fc layer 제거 , 배치 정규화 사용
+
+
+
+활용 방안
+1. 흑백 사진 컬러로 복원
+2. 픽셀 복원 : 손상된 부분 복원
+3. 사람의 동작 추정 실시간으로 관절위치 추정
+4. 이미지 캡셔닝 cnn 으로 이미지 특징 추출 rnn으로 특징기반 문장 생성
+
+
+
+RNN
+
+rnn의 장점
+길이가 다양한 입력 처리 가능
+시퀀스 구조 학습가능
+파라미터 수 절약 (웨잇 쉐어링)
+
+구조
+은닉층에 반복적으로 연결되어있음
+은닉층의 상태는 이전상태와 현재입력 기반으로 계산됨.
+ht = tanh (w(h-1)+w(h))
+
+rnn 학습방법 : 파라미터 집합을 학습
+1. 시간에 따라 ht 계산
+2. y 예측
+3. y실제값과 비교 및 오차 검사 후 bptt를 통해 update
+
+rnn의 한계 : 시쿼스가 길면 역전파시 정보 손실 발생
+오래된 입력 정보는 쉽게 잊어버린다.(long term dependency 문제)
+
+solution : lstm, gru
+중요한 정보만 기억하고 필요없는건 잊어버리는 게이트 구조
+lstm : 4개의 게이트 입출력 
+
+양방향 lstm : 순방향 역방향의 문맥을 동시 반영 (감정분석, 번역, 음성인식등)
+두개의 lstm을 붙이고 한개를 순방향 한개를 역방향으로 설정
+
+GRU (Gated Recurrent Unit)
+LSTM 보다 더 간단한 구조
+LSTM처럼 장/단기 기억을 처리하지만 구간을 간소화해서 더 적은연산으로 비슷한 성능 낼 수 있음
+cell state 없음, 게이트 수가 2개로 단순화 되어진다.
+
+
+Generatev ml
+gan = generator + discriminator 서로 대립적으로 학습한다.
+gan은 다른 모델에 비해 진짜 구별하기 힘들 데이터를 생성할 수 있음.
+
+generator : 무작위 잡음을 받아서 허구의 이미지 생성
+discriminator : 입력된 이미지가 진짜인지 가짜인지 구분하는 모델
+
+discriminator 훈련 방식 : gradient ascent방식으로 학습 (정확하면 더 좋으니 최대화 방향)
+generator 훈련방식 : discriminater를 속이도록 훈련 gradient desent로 판별기가 혼란을 주도록
+
+gan의 단점 : 학습이 매우 불안정하고 learning rate 영향을 받는다. 높은 learning rate 반영시 거의 실패
+
+DCGAN : cnn 기반 gan
+but cnn과 흐름이 반대이다. vetor를 이용하여 영상을 출력하는것 
+풀링레이어 제거 대산 conv레이어 사용
+batch 정규화 사용
+fully-connected layer대신 global average pooling 
+
+gan 보다 이미지 생성능력이 더좋다.
+
+dcgan의 핵심 활용 - discriminator의 중간 layer 출력을 활용해서 벡터표현 추출 가능
+(특징 추출) + semi supervised learning 응용
+
+왼쪽을 보고있는 사람을 오른쪽 얼굴을 보고있는 사람으로 바꿀 수있다. (DC gan)
+
+DISCO GAN , CYCLE GAN 
+1. disco gan : 서로 다른 도메인 사이의 관계를 학습하는 gan 모델
+a-b-a b-a-b 처럼 이렇게 되돌리는 구도를 통해 매핑을 보장 양방향 모두 고려하여 안정적으로 학습
+
+2. cycle gna : discogan과 비슷하지만 더 일반화된 구조
+
+stable diffusion 이미지에서 잡음으로 만들고 다시 잡음에서 이미지로 복원하는 구조
+순방향확산 - 역방향 확산 
+순방향 확산 이미지를 점점 잡음으로 바꿔가는 과정 
+역방향 확산 잡음에서 이미지로 복원하는 과정
+
+stable diffusion의 문제 : 연산이 매우 느려진다. 고성능 gpu로도 연산이 느림
+solution : latent diffusion model 잠재확산모델
+vae를 이용하여 잠재 확산공간 변환
+
+
+
+
+
+
+
 
