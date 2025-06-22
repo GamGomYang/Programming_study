@@ -1,0 +1,486 @@
+// #include <iostream>
+// using namespace std;
+// class Circle {
+//     int radius;
+// public:
+//     Circle() {
+//         radius = 1;
+//     }
+//     Circle(int r) {
+//         radius = r;
+//     }
+//     void setRadius(int r) {
+//         radius = r;
+//     }
+//     double getArea();
+// };
+// double Circle ::getArea() {
+//     return 3.14 * radius * radius;
+// }
+// int main() {
+//     Circle circleArray[3];
+//     circleArray[0].setRadius(10);
+//     circleArray[1].setRadius(20);
+//     circleArray[2].setRadius(30);
+//     for (int i = 0; i < 3; i++) {
+//         객체 배열로 멤버 접근
+//                 cout
+//             << "circle" << i << "area" << circleArray[i].getArea() << endl;
+//     }
+//     Circle *p;
+//     p = circleArray;
+//     for (int i = 0; i < 3; i++) {
+//         객체 포인터로 배열 접근
+//                 cout
+//             << "circle" << i << "area" << p->getArea() << endl;
+//         p++;
+//     }
+// }
+// #include <iostream>
+// using namespace std;
+// class Circle {
+//     int radius;
+// public:
+//     Circle() {
+//         radius = 1;
+//     }
+//     double getArea();
+// };
+// double Circle::getArea() {
+//     return 3.14 * radius * radius;
+// }
+// int main() {
+//     Circle circleArray[3] = {Circle(), Circle(), Circle()};
+//     for (int i = 0; i < 3; i++) {
+//         cout << circleArray[i].getArea() << endl;
+//     }
+// }
+// new 와 delete를 이용한 동적할당
+// #include <iostream>
+// using namespace std;
+// int main() {
+//     int *p;
+//     p = new int;
+//     if (!p) {
+//         cout << "error";
+//         return 0;
+//     }
+//     *p = 5;
+//     cout << *p << endl;
+//     int n = *p;
+//     cout << n << endl;
+//     delete p;
+//     // p 메모리 반환
+// }
+// #include <iostream>
+// using namespace std;
+// class Circle {
+//     int radius;
+// public:
+//     Circle() {
+//         radius = 1;
+//     }
+//     Circle(int r) {
+//         radius = r;
+//     }
+//     void setRadius(int r) {
+//         radius = r;
+//     }
+// };
+// int main() {
+//     Circle circle;
+// }
+// #include <iostream>
+// #include <string>
+// using namespace std;
+// class Point {
+//     int x, y;
+// public:
+//     void set(int x, int y) {
+//         this->x = x;
+//         this->y = y;
+//     }
+//     void showPoint() {
+//         cout << "(" << x << "," << y << ")" << endl;
+//     }
+// };
+// class ColorPoint : public Point {
+//     string color;
+// public:
+//     void setColor(string color) { this->color = color; }
+//     void showColorPoint();
+// };
+// void ColorPoint ::showColorPoint() {
+//     cout << color << ":";
+//     showPoint();
+// };
+// int main() {
+//     Point p;
+//     ColorPoint cp;
+//     cp.set(3, 4);
+//     cp.setColor("red");
+//     cp.showColorPoint();
+// }
+// 파생클래스에서는 기본클래스의 private멤버는 접근이 불가능하다.
+// 업캐스팅과 다운캐스팅
+// int main() {
+//     ColorPoint cp;
+//     ColorPoint *pDer;
+//     point *pBase = &cp;
+//     pBase->set(3, 4);
+//     pBase->showPoint();
+//     pDer = (ColorPoint *)pBase;
+//     pDer->setColor("Red");
+//     pDer->showColorPoint();
+// }
+
+// 템플릿
+
+// template <class T = int>
+// class Stack {
+
+// protected:
+//     int m_size;
+//     int m_top;
+//     T *m_buffer;
+
+// public:
+//     Stack(int size = sz);
+//     ~Stack();
+//     void Push(T value);
+//     T Pop();
+// }
+
+// template<class T>
+// void Stack<T> :: push(T value){}
+
+// #include <iostream>
+// using namespace std;
+
+// template <class T1, class T2>
+// class GClass {
+//     T1 data1;
+//     T2 data2;
+
+// public:
+//     GClass();
+//     void set(T1 a, T2 b);
+//     void get(T1 &a, T2 &b);
+// };
+
+// template <class T1, class T2>
+// GClass<T1, T2>::GClass() {
+
+//     data1 = 0;
+//     data2 = 0;
+// }
+
+// template <class T1, class T2>
+// void GClass<T1, T2>::set(T1 a, T2 b) {
+//     data1 = a;
+//     data2 = b;
+// }
+
+// template <class T1, class T2>
+// void GClass<T1, T2>::get(T1 &a, T2 &b) {
+//     a = data1;
+//     b = data2;
+// }
+
+// int main() {
+
+//     int a;
+//     double b;
+
+//     GClass<int, double> x;
+//     x.set(2, 0.5);
+//     x.get(a, b);
+
+//     cout << "a= " << a << '\t' << "b=" << b << endl;
+// }
+
+// #include <iostream>
+// using namespace std;
+// class Power {
+//     int kick;
+//     int punch;
+
+// public:
+//     Power(int kick = 0, int punch = 0) {
+//         this→kick = kick;
+//         this→punch = punch;
+//     }
+//     void show();
+//     Power operator+(Power op2); // + 연산자 함수 선언
+// };
+// void Power::show() {
+//     cout << "kick=" << kick << ',' << "punch=" << punch << endl;
+// }
+// Power Power::operator+(Power op2) {
+//     Power tmp;                          // 임시 객체 생성
+//     tmp.kick = this→kick + op2.kick;    // kick 더하기
+//     tmp.punch = this→punch + op2.punch; // punch 더하기
+//     return tmp;                         // 더한 결과 리턴
+// }
+
+// int main() {
+//     Power a(3, 5), b(4, 6), c;
+//     c = a + b; // 파워 객체 + 연산
+//     a.show();
+//     b.show();
+//     c.show();
+// }
+
+/*
+생성자 초기화 만약에 생성자가 없으면 자동으로 디폴트 생성자가 생성
+객체 배열 생성 될때 circle[3] = { circle(10), circle (20), circle(30)};
+
+객체 배열 초기화
+디폴트 생성자가 없으면 배열로 객체를 생성할때 컴파일 오류가 발생
+배열 객체 생성시 디폴트 생성자가 없으면 컴파일 오류가 발생한다.
+
+객체 포인터 선언 및 사용
+Circle *p;
+p = &donut;
+p->getArea();
+
+
+객체 포인터로 멤버 접근
+
+
+동적 메모리를 사용하면 메모리 낭비 해결
+실행 중 꼭 필요한 만큼 메모리 할당받아서 사용
+delete는 자동으로 null을 만들지 않기 때문에 수동으로 nllptr필요
+동적할당은 힘으로부터 할당
+
+동적 메모리를 사용하면 메모리 낭비 해결
+실행 중 꼭 필요한 만큼만 할당받아서 사용
+delete는 자동으로 null을 만들지 않기 때문에 수동으로 nullptr필요
+동적 할당은 힙메모리로 부터 할당
+
+
+동일한 메모리를 두번 delete 하면 실행시간 오류가 발생한다.
+int *pint = new int;
+
+
+delete pint;
+new 와 delete를 이용해서 동적 할당
+그니까 new를 안하고 delete를 하거나 delete를 두번하며 런타임 에러가 발생
+배열은 동적할당시 초기화 불가능
+
+소멸자는 생성의 반대순으로 일어난다.
+
+this는 개발자가 선언하는 변수가 아니라 컴파일러가 선언한 변수
+멤버함수가 아닐때 , static 멤버함수에서는 this 사용이 불가능하다.
+this 는 개발자가 아니라 컴파일러가 선언한 변수이다.
+static 멤버함수에서는 this를 사용할 수 없다.
+
+
+
+void increaseCircle(Circle &c) //참조 호출
+하면 값을 수정해준다.
+
+
+복사생성자는 한클래스에 오직 1개만 선언가능
+참조 매개 변수를 가지는 독특한 생성자
+복사 생성자는 한클래스에서 오직 1개만 생성가능 
+참조 매개 변수를 가지는 독특한 생성자
+
+
+circle (circle& c)// 복사생성자 선언
+
+Circle Dest(src)// dest객체의 복사생성자 호출
+circle (circle& c);
+Circle Dest(src);
+
+복사 생성자가 없으면 컴파일러가 디폴트 복사 생성자를 만든다.
+
+얕은 복사를 하면 결국 소멸을 할때 똑같은 소멸 delete가 2번 일어나기 때문에 문제가 발생한다.
+solution : 깊은 복사
+person(const person&p){
+    name = new char[strlen(p.name)+1];
+    strcpy(name, p.name);
+}
+소멸자는 생성자 반대 순서대로 실행되어진다.
+
+복사생성자는 1개만 선언할 수 있다.
+복사 생성자는 비트단위 1대1 비트단위
+
+프랜드 선언 3종류
+1. 외부함수 friend선언
+2. 외부 클래스 멤버함수
+3. 클래스
+
+friend 선언 방법
+friend bool equel
+friend bool RectManager::equal
+friend RectManager
+
+friend 는 private 속성을 가진 변수에도 접근이 가능하다.
+
+
+연산자 함수는 외부함수에 구현되고 클래스의 friend에 선언되는경우
+클래스의 멤버함수로 작성되는 경우
+
+
+Point *pbase = pder // 업캐스팅
+pder = (ColorPoint*) Pbase // 다운캐스팅
+강제 타입 변환이 필요함
+다운 케스팅 방법
+pder = (colorpoint*) pbase // 다운 캐스팅
+
+그니까 파생된 클래스에서도 private는 접근이 불가능하지만 protected멤버는 접근이 가능하다.
+
+상속을 public protected private에 따라 달라진다.
+
+Class Divide : protected Base{}
+이렇게 하면 protected로 달라짐
+접근 지정자가 달라진다.
+
+다중상속 상속 받고자 하는 기본 클래스들을 나열한다.
+가상상속은 다중상속에서 충돌나는걸 방지
+
+매개변수 타입을 바꾸는것 : 오버로딩
+자식클래스 함수 다시 정의 : 오버라이딩
+결국 가상함수는 오버라이딩일때 기존의 함수의 존재감을 삭제 시키는것
+
+가상함수는 파생클래스에서 구현할 함수 인터페이스를 오버라이딩을 통해 제공
+
+동적바인딩 정적바인딩
+동적 바인딩 기본클래스에 대한 포인터로 가상함수를 호출하는경우
+실행 중에 이루어 진다.
+동적바인딩 부모함수이지만 자식을 가르키니까 자식호출 실행중 이루어짐
+
+오버라이딩이 성공하려면 모두 다 타입이 일치해야한다.
+
+순수 가상함수 : 기본클래스의 가상함수를 굳이 구현할 필요가 있을까?
+
+
+power power :: operator+(power op2){
+    power tmp;
+    tmp.kick = this-> kick + op2.kick;
+
+}
+
+==
+bool power :: operator ==(power op2){
+    if(kick == op2.kick){
+        return true;
+        
+    }
+    else{
+        return false;
+    }
+}
+
+bool Power :: operator == (power op2){
+    if()
+}
+
+Power power ::operator+=(Power op2){
+    kick = kick + op2.kick;
+    punch = punch + op2.punch;
+    return *this;
+}
+
+
+Power Power :: operator+=(Power op2){
+    kick = kick + op2.kick;
+
+    return * this;
+
+}
+
+
+++
+
+Power Power :: operator++(){
+    kick++;
+    pucnch++;
+    return * this;
+}
+
+
+Power Power :: operator++(int x){
+    Power tmp = *this;
+    kick ++;
+    punch ++;
+    return tmp;
+
+}
+
+
+P
+*/
+
+
+
+new delete 는 힙에서메모리 관리
+delete 후에도 포인터는 그대로 nullptr
+int *p = new int;
+delete p ;
+
+p = nullptr;
+
+
+this 포인터 개발자 작성 x 컴파일러가 자동 생성
+static 멤버함수에서는 사용이 불가
+
+복사생성자 깊은 복사
+복사생성자는 한클래스에서 한개만 생성가능
+보통 매케변수 Class(const Class& other)이런 형태
+
+얕은 복사 깊은 복사
+얕은 복사 포인터만 복상해서 같은 메모리 사용 위험
+새로운 메모리 생성 후 값 복사
+
+person (const person&p){
+    name = new char[strlen(p.name)+1];
+    strcpy(name, p.name);
+}
+
+friend 선언
+클래스 클래서 멤버 함수 외부함수
+friend를 선언하면 private protected멤버에 접근가능
+
+연산자 오버로딩 오버라이딩 
+멤버함수로 작성하거나 외부 함수로 작성 (friend 필요!!)
+
+Power Power :: operator+(Power op2){}
+
+bool Power :: operater == (Power op2){}
+이런 형식임 멤버함수 느낌
+외부함수로 하고 friend도 되어짐
+
+업케스팅 다운캐스팅 자식 부모
+
+상속과 접근지정자 상속시 접근지정자를 다르게 하면 다르게 되너진다.
+
+다중상속과 가상상속
+가상상속은 다중상속에서 중복 상속을 방지하기 위한 방법
+가상상속
+
+가상함수 동적 바인딩
+가상함수 virtual 오버라이딩 가능
+동적 바인딩은 실행중에 함수가 결정되어진다.
+
+순수 가상함수
+함수만 선언하고 구현은 자식클래스에서
+이걸가진 클래스는 추상클래스 즉 추상클래스는 가상함수를 가진 클래스
+
+
+동적 메모리 객체 포인터
+힙으로 메모리 관리
+
+int *p =  new int;
+delete p;
+p = nullptr;
+
+this 포인터 컴파일러 static함수에서 안되어진다.
+복사생성자 는 1개만 정의 가능
+
+깊은복사는 주소 공유 x 안전하다.
+friend선언 
+
+연산자 오버로딩 
+Power power :: operator+(Power op2){}

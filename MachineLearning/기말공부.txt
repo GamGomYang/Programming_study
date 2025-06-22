@@ -72,7 +72,7 @@ VGGNET : alexnet 보다 2~3배 깊은 네트워크 13개의 컨볼루션 3개의
 1*1 커널의 활용 : 차원축소에 사용가능 추가적인 비선형성 도입(relu): 모델의 표현력강화
 
 
-googlenet : nn(network inn network) 기반
+googlenet : nn(network in network) 기반
 기존의 단순 conv - relu - pooling 대신
 mlpconv레이어 사용 - 작은 mlp들을 conv처럼 이동시키며 처리
 
@@ -158,7 +158,7 @@ DISCO GAN , CYCLE GAN
 1. disco gan : 서로 다른 도메인 사이의 관계를 학습하는 gan 모델
 a-b-a b-a-b 처럼 이렇게 되돌리는 구도를 통해 매핑을 보장 양방향 모두 고려하여 안정적으로 학습
 
-2. cycle gna : discogan과 비슷하지만 더 일반화된 구조
+2. cycle gan : discogan과 비슷하지만 더 일반화된 구조
 
 stable diffusion 이미지에서 잡음으로 만들고 다시 잡음에서 이미지로 복원하는 구조
 순방향확산 - 역방향 확산 
@@ -167,7 +167,8 @@ stable diffusion 이미지에서 잡음으로 만들고 다시 잡음에서 이�
 
 stable diffusion의 문제 : 연산이 매우 느려진다. 고성능 gpu로도 연산이 느림
 solution : latent diffusion model 잠재확산모델
-vae를 이용하여 잠재 확산공간 변환
+VAE를 이용하여 잠재 확산공간 변환
+
 
 
 
