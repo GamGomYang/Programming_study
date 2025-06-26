@@ -22,6 +22,7 @@ private:
         T *newData = new T[newCapacity];
 
         // 기존 데이터를 새 메모리로 복사
+
         for (int i = 0; i < currentSize; ++i) {
             newData[i] = data[i];
         }

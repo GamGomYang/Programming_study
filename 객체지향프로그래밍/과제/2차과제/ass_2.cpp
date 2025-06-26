@@ -1,272 +1,303 @@
+/*
 
-// 요구사항 1: 템플릿을 적용하여 다양한 데이터 타입을 지원
-// class T는 템플릿 매개변수로, int, double, string 등 어떤 타입이든 사용 가능
+과제2차 과제 공지 2025-06-14 00:00:00 ~ 2025-06-25 23:59:00
+C++의 vector와 유사한 클래스를 구현
+
+클래스명은 Vector(첫글자 대문자)으로 하고, C++의 vector와 유사한 클래스를 구현하라.
+Vector 클래스의 구현 사항은 다음과 같다.
+
+1. 템플릿을 적용하여 다양한 데이터 타입을 지원
+
+2. 다음과 같은 생성자를 지원
+    Vector(int capacity=1): capacity 만큼의 크기를 갖는 메모리를 동적 할당
+    Vector(const Vector<T> &v): Vector v를 깊은 복사하는 복사 생성자
+    Vector(const T* start, const T* end): start 포인터 위치에서 end 포인터 위치까지 배열의 값을 복사하는 생성자
+       예시)
+        int arr[] = { 1, 2, 3, 4, 5 };
+        Vector<int> v(arr + 1, arr + 3); // Vector v에는 2, 3 요소가 복사됨
+
+3. 다음과 같은 public 멤버 함수를 제공
+   void pushBack(const T &value); // Vector의 마지막에 value를 추가
+   void popBack(); // Vector의 마지막 요소를 제거
+   T& at(int index); // index에 해당하는 요소를 리턴
+   T& operator[](int index); // 배열의 인덱스 연산자와 동일한 기능, 쓰기 가능, 예) v[0] = value;
+   const T& operator[](int index) const; // operator[]의 const 버전(읽기), 예) cout << v[0] << endl;
+   Vector<T>& operator=(const Vector<T> &v); // Vector v의 값을 할당하는 연산자, 자기 자신을 리턴
+   Vector<T> operator+(const Vector<T> &v); // 현재 벡터(this)의 뒤에 Vector v를 요소를 추가하여 새로운 Vector 객체를 리턴, 현재벡터의 값은 변경되면 안됨
+   int size() const: 벡터에 저장된 요소의 수를 리턴
+
+4. 동적 할당을하므로 소멸자에서 정리하는 코드 필요
+5. 현재 할당된 메모리가 부족할 경우, 자동으로 할당된 메모리를 늘려주어야 함
+6. at 멤버함수와 operator[]의 경우 인덱스의 범위가 유효하지 않을 경우 "out of range"라는 예외를 던짐
+
+위의 요구사항을 만족하는 Vector를 구현하고,
+main 함수에서 각 기능을 테스트하는 코드를 작성할 것
+
+보고서 형식(다음과 같이 구성되어야 함)
+
+1. 표지 - 제목, 학번, 이름으로 구성
+
+2. 내용 구성
+
+    - 파일 별 전체 코드
+
+    - 실행 결과(스크린샷하여 문서 내에 첨부, main 함수의 테스트 결과)
+
+   - 주요 코드 및 설명
+
+제출 방법: 한글 또는 워드프로세서 등 문서 편집기를 이용하여 작성하되 PDF 파일로 변환하여 제출
+
+
+
+*/
+
+#include <iostream>
+#include <stdexcept>
+#include <string> // std::string을 사용하기 위해 추가
+
+using namespace std;
+
 template <class T>
+
 class Vector {
+
 private:
-    // Vector 클래스의 private 멤버 변수들
-    T *data;       // 동적 할당된 배열 포인터 - 실제 데이터를 저장하는 메모리
-    int _size;     // 실제 저장된 요소 개수 - 현재 벡터에 들어있는 원소의 수
-    int _capacity; // 할당된 메모리 용량 - 현재 할당된 메모리 크기 (>= _size)
+    T *data;
+    int vector_size;
+    int vector_capacity;
 
-    // 요구사항 5: 현재 할당된 메모리가 부족할 경우, 자동으로 할당된 메모리를 늘려주는 내부 함수
-    // newCapacity 크기로 메모리를 재할당하고 기존 데이터를 복사
-    void reserve(int newCapacity) {
-        // 이미 충분한 용량이 있으면 아무것도 하지 않음
-        if (newCapacity <= _capacity)
+protected:
+    void reserve(int reserve_capacity) {
+        if (reserve_capacity <= vector_capacity) {
             return;
+        }
 
-        // 새로운 용량으로 메모리 재할당
-        T *newData = new T[newCapacity];
+        T *newData = new T[reserve_capacity];
 
-        // 기존 데이터를 새 메모리로 복사
-        for (int i = 0; i < _size; ++i) {
+        for (int i = 0; i < vector_size; i++) {
             newData[i] = data[i];
         }
 
-        // 기존 메모리 해제
         delete[] data;
-
-        // 새로운 메모리와 용량으로 업데이트
         data = newData;
-        _capacity = newCapacity;
+        vector_capacity = reserve_capacity;
     }
 
 public:
-    // 요구사항 2-1: Vector(int capacity=1) 생성자 - capacity 만큼의 크기를 갖는 메모리를 동적 할당
-    // 기본값 1로 설정하여 capacity를 지정하지 않으면 1개 요소를 저장할 수 있는 메모리 할당
+    // 생성자
     Vector(int capacity = 1)
-        : data(new T[capacity]), _size(0), _capacity(capacity) {
-        // 멤버 초기화 리스트를 사용하여 초기화
-        // data: capacity 크기의 T 타입 배열을 동적 할당
-        // _size: 초기에는 요소가 없으므로 0
-        // _capacity: 할당된 메모리 크기는 capacity
+        : data(new T[capacity]), vector_size(0), vector_capacity(capacity) {
     }
 
-    // 요구사항 2-2: 복사 생성자 (깊은 복사) - Vector v를 깊은 복사
-    // 다른 Vector 객체의 모든 데이터를 복사하여 새로운 Vector 객체 생성
+    // 깊은 복사 - 벡터 깊은 복사
     Vector(const Vector<T> &v)
-        : data(new T[v._capacity]), _size(v._size), _capacity(v._capacity) {
-        // 멤버 초기화 리스트로 v와 동일한 용량의 메모리 할당
-        // _size와 _capacity도 v와 동일하게 설정
+        : data(new T[v.vector_capacity]), vector_size(v.vector_size), vector_capacity(v.vector_capacity) {
 
-        // 깊은 복사: v의 모든 데이터를 새로 할당된 메모리에 복사
-        for (int i = 0; i < _size; ++i) {
+        for (int i = 0; i < vector_size; i++) {
+
             data[i] = v.data[i];
         }
     }
 
-    // 요구사항 2-3: 범위 생성자 - start 포인터 위치에서 end 포인터 위치까지 배열의 값을 복사
-    // 예시: int arr[] = {1, 2, 3, 4, 5}; Vector<int> v(arr + 1, arr + 3); // 2, 3, 4 요소가 복사됨
-    Vector(const T *start, const T *end)
-        : _size(static_cast<int>(end - start)), _capacity(_size), data(nullptr) {
-        // end - start로 범위의 크기를 계산하여 _size 설정
-        // _capacity는 _size와 동일하게 설정 (정확히 필요한 만큼만 할당)
-        // data는 일단 nullptr로 초기화
+    // start 에서 end까지 배열 값 복사
+    Vector(const T *start, const T *end) {
+        int range_size = end - start;
+        if (range_size < 0) {
+            // 예외 처리
+            throw std::out_of_range("error : 벡터 사이즈가 0보다 작아요");
+        }
 
-        // 유효하지 않은 범위 체크 (end가 start보다 앞에 있으면 음수)
-        if (_size < 0)
-            throw std::out_of_range("Invalid range");
+        vector_size = range_size;
+        vector_capacity = range_size;
+        data = new T[vector_capacity];
 
-        // 필요한 크기만큼 메모리 할당
-        data = new T[_capacity];
-
-        // start부터 end까지의 모든 요소를 복사
-        for (int i = 0; i < _size; ++i) {
+        for (int i = 0; i < vector_size; ++i) {
             data[i] = *(start + i);
         }
     }
 
-    // 요구사항 4: 소멸자 - 동적 할당된 메모리를 정리
-    // Vector 객체가 소멸될 때 자동으로 호출되어 메모리 누수 방지
+    // 소멸자
+
     ~Vector() {
-        delete[] data; // 동적 할당된 배열 메모리 해제
+        delete[] data;
     }
 
-    // 요구사항 3-1: pushBack - Vector의 마지막에 value를 추가
-    // 벡터의 끝에 새로운 요소를 추가하는 함수
-    void pushBack(const T &value) {
-        // 현재 용량이 부족하면 자동으로 용량을 늘림 (요구사항 5)
-        if (_size >= _capacity) {
-            reserve(_capacity * 2); // 용량을 2배로 늘림
+    void push_back(const T &value) {
+
+        if (vector_size >= vector_capacity) {
+            reserve(vector_capacity * 2);
         }
 
-        // 마지막 위치에 새 요소 추가하고 크기 증가
-        data[_size++] = value;
+        data[vector_size] = value;
+        vector_size++;
     }
 
-    // 요구사항 3-2: popBack - Vector의 마지막 요소를 제거
-    // 벡터의 마지막 요소를 제거하는 함수
-    void popBack() {
-        // 빈 벡터에서 popBack을 시도하면 예외 발생
-        if (_size == 0)
-            throw std::out_of_range("popBack on empty Vector");
+    void pop_back() {
 
-        // 크기만 감소시켜 마지막 요소를 "제거" (실제로는 메모리에서 삭제하지 않음)
-        --_size;
+        if (vector_size == 0) {
+
+            throw std::out_of_range("error : popback 에러");
+        }
+        --vector_size;
     }
 
-    // 요구사항 3-3: at - index에 해당하는 요소를 리턴 (범위 검사 포함)
-    // 요구사항 6: 인덱스의 범위가 유효하지 않을 경우 "out of range" 예외를 던짐
     T &at(int index) {
-        // 인덱스가 유효한 범위인지 검사
-        if (index < 0 || index >= _size)
-            throw std::out_of_range("out of range");
 
-        // 유효한 인덱스면 해당 요소의 참조 반환
+        if (index < 0 || index >= vector_size) {
+
+            throw std::out_of_range(" error : 범위를 벗어남");
+        }
+
         return data[index];
     }
 
-    // 요구사항 3-4: operator[] (비-const 버전) - 배열의 인덱스 연산자와 동일한 기능, 쓰기 가능
-    // 예시: v[0] = value; 형태로 사용 가능
-    // 요구사항 6: 인덱스의 범위가 유효하지 않을 경우 "out of range" 예외를 던짐
-    T &operator[](int index) {
-        // 인덱스가 유효한 범위인지 검사
-        if (index < 0 || index >= _size)
-            throw std::out_of_range("out of range");
-
-        // 유효한 인덱스면 해당 요소의 참조 반환 (쓰기 가능)
-        return data[index];
-    }
-
-    // 요구사항 3-4: operator[] const 버전 - 읽기 전용 버전
-    // 예시: cout << v[0] << endl; 형태로 사용 가능
-    // 요구사항 6: 인덱스의 범위가 유효하지 않을 경우 "out of range" 예외를 던짐
     const T &operator[](int index) const {
-        // 인덱스가 유효한 범위인지 검사
-        if (index < 0 || index >= _size)
-            throw std::out_of_range("out of range");
+        if (index < 0 || index >= vector_size) {
+            throw std::out_of_range("예외처리 : 범위를 벗어남");
+        }
 
-        // 유효한 인덱스면 해당 요소의 const 참조 반환 (읽기 전용)
         return data[index];
     }
 
-    // 요구사항 3-5: 대입 연산자 - Vector v의 값을 할당하는 연산자, 자기 자신을 리턴
-    // 깊은 복사를 통해 다른 Vector의 모든 데이터를 복사
+    T &operator[](int index) {
+        if (index < 0 || index >= vector_size) {
+            throw std::out_of_range("예외처리 : 범위를 벗어남");
+        }
+
+        return data[index];
+    }
+
     Vector<T> &operator=(const Vector<T> &v) {
-        // 자기 자신에게 대입하는 경우는 아무것도 하지 않음 (자기 대입 방지)
         if (this != &v) {
-            // 기존 메모리 해제
             delete[] data;
 
-            // v와 동일한 용량과 크기로 설정
-            _capacity = v._capacity;
-            _size = v._size;
+            vector_capacity = v.vector_capacity;
+            vector_size = v.vector_size;
 
-            // 새로운 메모리 할당
-            data = new T[_capacity];
+            data = new T[vector_capacity];
 
-            // v의 모든 데이터를 깊은 복사
-            for (int i = 0; i < _size; ++i) {
+            for (int i = 0; i < vector_size; ++i) {
                 data[i] = v.data[i];
             }
         }
-
-        // 자기 자신의 참조를 반환 (연쇄 대입 지원)
         return *this;
     }
 
-    // 요구사항 3-6: 벡터 연결 연산자 + - 현재 벡터(this)의 뒤에 Vector v를 요소를 추가하여 새로운 Vector 객체를 리턴
-    // 현재벡터의 값은 변경되면 안됨 (const 멤버 함수로 구현)
     Vector<T> operator+(const Vector<T> &v) const {
-        // 결과 벡터를 생성 (크기는 this의 크기 + v의 크기)
-        Vector<T> result(_size + v._size);
+        Vector<T> result(vector_size + v.vector_size);
 
-        // 현재 벡터(this)의 모든 요소를 결과 벡터에 복사
-        for (int i = 0; i < _size; ++i) {
-            result.pushBack(data[i]);
+        for (int i = 0; i < vector_size; i++) {
+            result.push_back(data[i]);
         }
 
-        // v 벡터의 모든 요소를 결과 벡터에 추가
-        for (int i = 0; i < v._size; ++i) {
-            result.pushBack(v.data[i]);
+        for (int i = 0; i < v.vector_size; ++i) {
+            result.push_back(v.data[i]);
         }
 
-        // 새로운 Vector 객체를 반환 (현재 벡터는 변경되지 않음)
         return result;
     }
 
-    // 요구사항 3-7: size - 벡터에 저장된 요소의 수를 리턴
-    // const 멤버 함수로 구현하여 벡터의 상태를 변경하지 않음
     int size() const {
-        return _size; // 현재 저장된 요소의 개수 반환
+        return vector_size;
     }
 };
 
-// main 함수: Vector 클래스의 모든 기능을 테스트하는 코드
-int main() {
-    try {
-        // 테스트 1: 기본 생성자와 pushBack 테스트
-        // 요구사항 2-1: Vector(int capacity=1) 생성자 테스트
-        // 요구사항 3-1: pushBack 함수 테스트
-        Vector<int> v1;  // 기본 생성자 호출 (capacity=1)
-        v1.pushBack(10); // 첫 번째 요소 추가 (자동으로 용량 증가)
-        v1.pushBack(20); // 두 번째 요소 추가
-        v1.pushBack(30); // 세 번째 요소 추가
-
-        // operator[]를 사용하여 요소 출력
-        std::cout << "v1: ";
-        for (int i = 0; i < v1.size(); ++i)
-            std::cout << v1[i] << ' '; // 요구사항 3-4: operator[] 테스트
-        std::cout << "\n";
-
-        // 테스트 2: 복사 생성자 테스트
-        // 요구사항 2-2: 복사 생성자 테스트
-        Vector<int> v2(v1); // v1을 깊은 복사하여 v2 생성
-        v2.pushBack(40);    // v2에 추가 요소 삽입 (v1에는 영향 없음)
-
-        // at 함수를 사용하여 요소 출력
-        std::cout << "v2 (copy of v1 + 40): ";
-        for (int i = 0; i < v2.size(); ++i)
-            std::cout << v2.at(i) << ' '; // 요구사항 3-3: at 함수 테스트
-        std::cout << "\n";
-
-        // 테스트 3: 범위 생성자 테스트
-        // 요구사항 2-3: 범위 생성자 테스트
-        int arr[] = {1, 2, 3, 4, 5};
-        Vector<int> v3(arr + 1, arr + 4); // arr[1]부터 arr[3]까지 복사 (2, 3, 4)
-
-        std::cout << "v3 (range arr[1]..arr[3]): ";
-        for (int i = 0; i < v3.size(); ++i)
-            std::cout << v3[i] << ' ';
-        std::cout << "\n";
-
-        // 테스트 4: 대입 연산자 테스트
-        // 요구사항 3-5: 대입 연산자 테스트
-        Vector<int> v4;
-        v4 = v3; // v3의 내용을 v4에 대입
-
-        std::cout << "v4 (= v3): ";
-        for (int i = 0; i < v4.size(); ++i)
-            std::cout << v4[i] << ' ';
-        std::cout << "\n";
-
-        // 테스트 5: 벡터 연결 연산자 + 테스트
-        // 요구사항 3-6: operator+ 테스트
-        Vector<int> v5 = v1 + v3; // v1과 v3를 연결한 새로운 벡터 생성
-
-        std::cout << "v5 (v1 + v3): ";
-        for (int i = 0; i < v5.size(); ++i)
-            std::cout << v5[i] << ' ';
-        std::cout << "\n";
-
-        // 테스트 6: popBack 함수 테스트
-        // 요구사항 3-2: popBack 함수 테스트
-        v5.popBack(); // 마지막 요소 제거
-
-        std::cout << "v5 after popBack: ";
-        for (int i = 0; i < v5.size(); ++i)
-            std::cout << v5[i] << ' ';
-        std::cout << "\n";
-
-        // 테스트 7: 예외 처리 테스트 (주석 처리됨)
-        // 요구사항 6: 범위를 벗어난 접근 시 "out of range" 예외 발생 테스트
-        // std::cout << v5.at(100) << std::endl; // Uncomment to test exception
-
-    } catch (const std::exception &e) {
-        // 예외가 발생하면 에러 메시지 출력
-        std::cerr << "Exception: " << e.what() << '\n';
+// 벡터의 내용을 출력하는 헬퍼 함수
+template <typename T>
+void printVector(const string &name, const Vector<T> &v) {
+    cout << name << " (size: " << v.size() << "): ";
+    for (int i = 0; i < v.size(); ++i) {
+        cout << v[i] << ' ';
     }
+    cout << endl;
+}
+
+int main() {
+    cout << "push_back 테스팅" << endl;
+    Vector<int> v1;
+    v1.push_back(10);
+    v1.push_back(20);
+    v1.push_back(30);
+    printVector("v1", v1);
+    cout << endl;
+
+    cout << "복사 생성자 테스팅" << endl;
+    Vector<int> v2(v1);
+    printVector("v2 -> v1의 복사본", v2);
+    cout << "v2에 40 추가" << endl;
+    v2.push_back(40);
+    printVector("v1 (v2 변경 후)", v1);
+    printVector("v2 (40 추가 후)", v2);
+    cout << endl;
+
+    cout << "범위 생성자 테스트" << endl;
+    int arr[] = {1, 2, 3, 4, 5};
+    Vector<int> v3(arr + 1, arr + 4);
+    printVector("v3 -> 배열의 일부로 생성", v3);
+    cout << endl;
+
+    cout << "대입 연산자(=) 테스트" << endl;
+    Vector<int> v4;
+    v4 = v3;
+    printVector("v4 ->v3 대입 후", v4);
+    cout << "자기 자신에게 대입" << endl;
+    v4 = v4;
+    printVector("v4 -> 자기 자신에게 대입 후", v4);
+    cout << endl;
+
+    cout << " + 연산자 테스트" << endl;
+    Vector<int> v5 = v1 + v3;
+    printVector("v5 (v1 + v3)", v5);
+    cout << endl;
+
+    cout << "pop_back 테스트" << endl;
+    printVector("v5 : pop_back 전", v5);
+    v5.pop_back();
+    printVector("v5 : pop_back 후", v5);
+    cout << endl;
+
+    cout << "인덱스 연산자 테스트" << endl;
+    cout << "v5[0] = " << v5[0] << endl;
+    cout << "v5[0]에 100 할당" << endl;
+    v5[0] = 100;
+    printVector("v5 (v5[0] 수정 후)", v5);
+    cout << endl;
+
+    cout << "at() 멤버 함수 테스팅" << endl;
+    cout << "v5.at(1) = " << v5.at(1) << endl;
+    cout << endl;
+
+    cout << "operator[] 테스트" << endl;
+    const Vector<int> v_const(arr, arr + 5);
+    printVector("v_const", v_const);
+    cout << "v_const[2] = " << v_const[2] << endl;
+
+    cout << endl;
+
+    cout << "템플릿-string 자료형 테스트 " << endl;
+    Vector<string> v_str;
+    v_str.push_back("Hello");
+    v_str.push_back("C++");
+    v_str.push_back("Vector");
+    printVector("v_str", v_str);
+    cout << endl;
+
+    cout << "예외 처리 테스트" << endl;
+    try {
+        cout << "v5.at(100)" << endl;
+        v5.at(100);
+    } catch (const out_of_range &e) {
+        cerr << "예외 발생: " << e.what() << endl;
+    }
+
+    try {
+        cout << "빈 벡터에 pop_back 넣었을때" << endl;
+        Vector<int> empty_vec;
+        empty_vec.pop_back();
+    } catch (const out_of_range &e) {
+        cerr << "예외 발생: " << e.what() << endl;
+    }
+    cout << endl;
 
     return 0;
 }
