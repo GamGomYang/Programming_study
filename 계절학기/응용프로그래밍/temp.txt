@@ -40,7 +40,7 @@ void print_primes(int count, char *array) {
     printf("%d의 소수:\n", count);
     for (n = 2; n <= count; n++) {
         if (array[n] == 0) {
-            printf("%d  ", n);
+            printf("%9d", n);
         }
     }
     printf("\n");
