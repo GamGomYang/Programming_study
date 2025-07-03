@@ -867,3 +867,151 @@ NULL 문자 (\0)
 //         }
 //     }
 // }
+
+// struct student {
+//     int number;
+//     char name[20];
+//     double grade;
+// };
+
+// int main(void) {
+
+//     struct student s1 = {123, "kim", 3};
+//     struct student *p;
+
+//     p = &s1;
+
+//     printf("%f", (*p).grade);
+// }
+
+// 포인터 멤버로 가지는 구조체
+
+// struct student {
+//     int number;
+//     char name[20];
+//     double grade;
+// };
+
+// struct letgo {
+//     int letgo;
+//     struct student *p;
+// };
+
+// int main(void) {
+
+//     struct student stu1 = {202, "kim", 3};
+
+//     struct letgo let1 = {123};
+
+//     let1.p = &stu1;
+
+//     printf("%d", let1.p->number);
+
+//     return 0;
+// }
+// int main(void) {
+
+//     char filename[100];
+//     int i = 0;
+
+//     for (int i = 0; i < 6; i++) {
+
+//         sprintf(filename, "image%d.jpg", i);
+//         printf("%s \n", filename);
+//     }
+
+//     return 0;
+// }
+
+// int main() {
+//     char str[] = "this is ,a sample programming";
+
+//     char *token;
+
+//     token = strtok(str, " ,.");
+//     while (pch != NULL) {
+//         printf("%s\n", token);
+//         token = strtok(NULL, " ,.");
+//     }
+
+//     return 0;
+// }
+
+// void eratos(int number, char array[]) {
+//     int n, m, to, last, index;
+
+//     to = (int)sqrt((double)number);
+//     for (n = 2; n <= to; n++) {
+//         last = number / n;
+//         for (m = 2; m <= last; m++) {
+//             index = n * m;
+//             array[index] = 1;
+//         }
+//     }
+// }
+
+// void eratos(int number, char array[]) {
+//     int n, m, to, last, index;
+
+//     to = (int)sqrt((double)number);
+//     for (n = 2; n <= to; n++) {
+
+//         last = number / n;
+//         for (m = 2; m <= last; m++) {
+//             index = n * m;
+//             array[index] = 1;
+//         }
+//     }
+// }
+
+// 동적 배열 할당
+
+// int *array = (int *)malloc(sizeof(int) * 5);
+// int *array2 = (int *)calloc(5, sizeof(int));
+
+// free(array);
+// free(array2);
+
+// void read_file() {
+
+//     char buffer[256];
+
+//     FILE *fp = fopen("sample.txt", "r");
+
+//     if (fp == NULL) {
+//         perror("error");
+//         return 1;
+//     }
+
+//     while (fgets(buffer, 255, fp) != NULL) {
+
+//         char *token = strtok(buffer, " ,.?\n\t");
+//         while (token != NULL) {
+//         }
+//     }
+// }
+
+// strcpy(dest, src);
+// strcat(dest, src);
+
+// strcmp(s1, s2);
+// strchr(str, ch);
+// strstr(str, substr);
+
+// fgets(str, size, stdin);
+// gets_s;
+// puts(str);
+
+// getchar putchar;
+// gets puts;
+// fgets fputs;
+
+// srand(time(NULL));
+
+// void func(char **tp);
+// p -> grade;
+
+// stu.p -> grade
+// stu.p = &cli;
+
+// stu.*p.grade
