@@ -1,9 +1,0 @@
-C programming is a popular computer programming language  
-which is widely used for system and application software.  
-Despite being fairly old programming language,  
-C programming is widely used because of its efficiency and control.  
-This tutorial is intended for beginners who does not have any prior knowledge  
-or have very little knowledge of computer programming.  
-All basic features of C programming language are included in detail with explana  
-tion  
-and output to give you solid platform to understand C programming.
