@@ -85,3 +85,45 @@
 # out = f"ab{fnCalculation(a,pa)}ca{fnCalculation(a,pb)}"
 # print(out)    
 
+# def func(lst):
+#     for i in range(len(lst)// 2):
+#         lst[i], lst[-i-1] = lst[-i-1] , lst[i]
+# lst = [1,2,3,4,5,6]
+# func(lst)
+# print(lst)
+
+#tuple , list 도 하나의 type 자료형이다
+# def func(value):
+#     if type(value) == type(100):
+#         return 100 
+#     elif type(value) == type(""):
+#         return len(value)
+#     else:
+#         return 20
+    
+# a = '100.0'
+# b = 100.0
+# c  = (100,200)
+# print(func(a)+func(b)+func(b))
+
+
+class Node:
+    def __init__(self , value):
+        self.value = value
+        self.children = []
+
+def tree(li):
+    nodes = [Node(i) for i in li]
+    for i in range(1, len(li)):
+        nodes[(i - 1) // 2].children.append(nodes[i])
+    return nodes[0]
+
+def calc(node, level=0):
+    if node is None:
+        return 0
+    return (node.value if level % 2 == 1 else 0) + sum(calc(n, level + 1) for n in node.children)
+
+
+li = [3, 5, 8, 12, 18, 21]
+root = tree(li)
+print(calc(root))
