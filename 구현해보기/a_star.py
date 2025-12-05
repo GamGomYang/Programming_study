@@ -4,7 +4,6 @@ def manhattan(a, b):
     return abs(a[0] - b[0]) + abs(a[1]- b[1])
 
 def astar(grid, start, goal):
-
     rows , cols = len(grid), len(grid[0])
     open_set = []
     heappush(open_set , (0 , start))
