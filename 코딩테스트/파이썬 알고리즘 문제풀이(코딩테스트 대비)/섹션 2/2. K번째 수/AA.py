@@ -2,7 +2,7 @@ import sys
 
 #1. readline - 한줄 읽어오기
 #2. strip - 불필요한 char (\n, ' ' ) 이런거 없애주는 역할을 함
-sys.stdin = open("input.txt", "rt")
+
 
 input = sys.stdin.readline
 # T - testcase 테스트 케이스로 생각해보기
@@ -17,7 +17,7 @@ for T in range(T):
     arr = arr[b-1 : c]
 
     arr.sort()
-    print("#%d %d" %(T,arr[d-1]))
+    print("#%d %d" %(T+1,arr[d-1]))
 
 
 
