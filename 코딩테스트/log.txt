@@ -76,5 +76,90 @@ for idx , value in enumerate(a):
         if value > score:
             res = idx
             score = value  
-
 print(ave, res)
+import sys
+# sys.stdin = open("input.txt", "rt")
+input = sys.stdin.readline
+n, m = map(int , input().split())
+cnt = [0]*(n+m+2)
+max = -21470000
+for i in range (1, n+1):
+    for j in range(1, m+1):
+        cnt[i+j] +=1
+for i in range (n+m+1):
+    if cnt[i]> max:
+        max = cnt[i]
+for i in range(n+m+1):
+    if cnt[i] == max:
+        print(i , end = ' ')
+        '''
+#1 - 나머지 (%) 연산과 나누기(//) 연산
+import sys
+sys.stdin = open("input.txt", "rt")
+n = int(input())
+arr = map(int, input().split())
+
+max = -2147000000
+
+def digit_sum(x):
+    sum = 0
+    while x > 0:
+        sum += x%10
+        x = x//10
+        return sum
+    
+for i in arr:
+    total = digit_sum(i)
+    if total > max :
+        max = total
+        res = i
+
+print(i) 
+
+'''
+
+#2 문자열 (str) 사용
+import sys
+# sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+arr = list(map(int , input().split()))
+
+def digit_sum(x):
+    sum = 0 
+    for i in str(x):
+        #str(x) -> str로 변환
+        sum += int(i)
+    return sum    
+max = -2147000000
+
+for x in arr:
+    total = digit_sum(x)
+    if total > max :
+        max = total
+        res = x
+    
+print(res)
+import sys
+# sys.stdin = open("input.txt" , "rt")
+
+n = int(input())
+isPrime = [True]*(n+1)
+isPrime[0] = False
+isPrime[1] = False
+
+for i in range(2, int(n**0.5)+1):
+    if isPrime[i]:
+        for j in range(i*i, n+1, i ):
+            isPrime[j] = False
+
+primes = []
+cnt = 0
+for i in range(2, n+1):
+    if isPrime[i]:
+       cnt+=1 
+
+print(cnt)
+
+
+
