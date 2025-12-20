@@ -1,0 +1,80 @@
+# import sys
+# # sys.stdin = open("input.txt", "rt")
+# input = sys.stdin.readline
+# a , b = map(int , input().split())
+# arr = list(map(int , input().split()))
+# import sys
+# sys.stdin = open("input.txt", "rt")
+# input = sys.stdin.readline
+# cnt = 0
+# a, b = map(int , input().split())
+# for i in range(1,a+1):
+#     if( a % i == 0):
+#         cnt+=1
+#     if(cnt == b):
+#         print(i)
+#         break
+# else:
+#     print(-1)
+# import sys
+# sys.stdin = open("input.txt", "rt")
+# input = sys.stdin.readline
+# n, k = map(int , input().split())
+# arr = list(map(int, input().split()))
+# res = set()
+# for i in range (n):
+#     for j in range(i+1 , n):
+#         for t in range(j+1 , n):
+#             res.add(arr[i]+arr[j]+arr[t])
+# result = sorted(res,reverse = True)
+# print(result[k-1])
+# import sys
+# sys.stdin = open("input.txt", "rt")
+# input = sys.stdin.readline
+# T = int(input())
+# for i  in range (T):
+#     n, s, e, k = map(int , input().split())
+#     arr = list(map(int , input().split()))
+#     arr = arr[s-1:e]
+#     arr.sort()
+#     print(f"#{i+1} {arr[k-1]}")
+import sys
+sys.stdin = open("input.txt", "rt")
+input = sys.stdin.readline
+n = int(input())
+arr = list(map(int , input().split()))
+total = 0
+for i in range(n):
+    total += arr[i]
+mean = round(total / n)
+min_diff = 100
+for j in range(n):
+    diff = abs(arr[j] - mean)
+    if diff < min_diff or (diff == min_diff and arr[j] > arr[student]):
+        min_diff = diff
+        student = j
+print(f"{arr[student]} {student+1}")
+import sys
+
+# sys.stdin = open("input.txt", "rt")
+n = int(input())
+a = list(map(int, input().split()))
+
+ave = round(sum(a)/n)
+# round - 반올림 하는 함수 int 형변환과 다름
+min = 2147000000
+
+#enumerate -> 리스트의 index와 value둘다 출력
+for idx , value in enumerate(a):
+    tmp = abs(value - ave)
+    if tmp < min:
+        min = tmp
+        score = value
+        res = idx+1
+
+    elif tmp == min:
+        if value > score:
+            res = idx
+            score = value  
+
+print(ave, res)
