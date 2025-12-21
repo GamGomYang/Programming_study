@@ -161,5 +161,182 @@ for i in range(2, n+1):
 
 print(cnt)
 
+import sys
+
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+arr = list(map(int, input().split()))
+
+ave = int((sum(arr)/n) +0.5)
+min = 2147000000
+
+
+for idx , value in enumerate(arr):
+    tmp = abs(value - ave)
+    if(tmp < min):
+        min = tmp
+        res = idx+1
+        score = value
+    elif(tmp == min):
+        if(score<value):
+            res = idx+1
+            score = value
+    
+
+print(f"{ave} {res}")
+import sys
+
+sys.stdin = open("input.txt", "rt")
+
+n, m = map(int, input().split())
+
+arr = [0]*(m+n+3)
+max = -2147000000
+
+for i in range(1, n+1):
+    for j in range(1,m+1):
+        arr[i+j] += 1
+
+        if arr[i+j] > max:
+            max = arr[i+j]
+
+
+for i in range (1, m+n+1):
+    if(arr[i] == max):
+        print(i, end = ' ')
+
+import sys
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+arr = list(map(int, input().split()))
+
+def digit_sum(x):
+    add =0
+
+    while(x>0):
+        add += x%10
+        x = x//10
+
+    return add
+
+max = -2147000000
+
+for i in arr:
+    sum = digit_sum(i)
+    res = 0
+    if(sum > max):
+        max = sum
+        res = i
+    
+print(i)
+
+import sys
+sys.stdin = open("input.txt", "rt")
+
+
+n = int(input())
+
+arr = [True]*(n+2)
+arr[0] = False
+arr[1] = False
+
+for i in range(2 , int(n**0.5+1)):
+    for j in range(i, n+1 , i):
+        arr[j] = False
+    
+cnt =2
+for i in range(2, n+1):
+    if arr[i] :
+        print(i)
+        cnt +=1
+
+print(cnt)
+    
+import sys
+
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+arr = list(map(int, input().split()))
+
+def reverse(x):
+    num = 0
+    while(x>0):
+        num = num*10 + x%10
+        x = x//10
+
+    return num
+
+def isPrime(x):
+    for i in range(2, int(x**0.5+1)):
+        if x % i == 0:
+            return False
+    return True
+    
+for a in arr :
+    rev = reverse(a)
+    if isPrime(rev):
+        print(rev, end = ' ')
+
+
+import sys
+
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+
+arr = list(map(int , input().split()))
+total =0 
+plus =0 
+
+for i in range(n):
+
+    if(arr[i]==1):
+        plus +=1
+        total += plus
+
+    elif(arr[i] == 0):
+        plus =0
+
+
+print(total)
+
+import sys
+# sys.stdin = open("input.txt","rt")
+
+
+s = str(input())
+
+res = ""
+
+for i in s:
+    if i>='A' and i<='z' :
+        continue
+    else:
+        res += i
+    
+
+result = int(res)
+
+cnt = 0
+for i in range(1,result+1):
+    if(result % i == 0):
+        cnt +=1
+
+
+print(result)
+print(cnt)
+
+
+
+
+
+
+
 
 
