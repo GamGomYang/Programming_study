@@ -335,6 +335,96 @@ print(cnt)
 
 
 
+import sys
+
+# sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+n_arr = list(map(int, input().split()))
+
+m = int(input())
+m_arr = list(map(int, input().split()))
+
+new_arr = n_arr + m_arr
+
+new_arr.sort()
+
+for i in range(n+m):
+    print(new_arr[i], end = ' ')
+
+import sys
+
+# sys.stdin = open("input.txt", "rt")
+
+n, m = map(int, input().split())
+arr = list(map(int, input().split()))
+
+cnt = 0
+left = 0
+res = 0
+
+for right in range(n):
+    res += arr[right]
+    while res > m :
+        res -= arr[left]
+        left += 1
+    if res == m :
+        cnt+=1 
+
+print(cnt)
+
+
+'''
+for i in range(n):
+    res =0 
+    if arr[i] != m:
+        res += arr[i]
+        for j in range(i+1 , n):
+            res += arr[j]    
+            if(res == m):
+                cnt +=1
+                break
+            elif(res > m):
+                break
+            else:
+                continue
+    else:
+        cnt +=1
+
+print(cnt)
+
+'''
+import sys
+# sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+arr = [list(map(int, input().split())) for _ in range(n)]
+
+max_sum = -2147000000
+diagonal_sum_1 = 0
+diagonal_sum_2 =0
+
+for i in range (n):
+    row_sum = 0
+    column_sum = 0
+    for j in range(n):
+        row_sum += arr[i][j]
+        column_sum += arr[j][i]
+    max_sum = max(max_sum, row_sum , column_sum) 
+    diagonal_sum_1 += arr[i][i]
+    diagonal_sum_2 += arr[i][n-1-i]
+
+
+max_sum = max(max_sum , diagonal_sum_1 , diagonal_sum_2)
+
+
+print(max_sum)
+
+
+
+
+
 
 
 
