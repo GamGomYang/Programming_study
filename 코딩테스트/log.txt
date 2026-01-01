@@ -770,4 +770,111 @@ for _ in range(m):
 print(arr[l-1] - arr[0])
 
 
+import sys
 
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+arr = []
+for i in range(n):
+
+    s,e  = map(int, input().split())
+    arr.append((s,e))
+
+
+arr.sort(key = lambda x : (x[1], x[0]))
+
+cnt = 0
+et = 0
+for s, e in arr:
+    
+    if et <= s:
+        cnt +=1
+        et = e
+    
+print(cnt)
+
+
+import sys
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+arr = []
+
+for i in range(n):
+    s, e = map(int , input().split())
+    arr.append((s,e))
+
+cnt = 0
+
+arr.sort(key = lambda x : (x[1], x[0]), reverse = True)
+max = 0
+
+
+for x , y in arr:
+    if max < x:
+        cnt +=1
+        max = x
+
+print(cnt)
+    
+
+import sys
+sys.stdin = open("input.txt", "rt")
+
+n , m = map(int, input().split())
+
+arr = list(map(int , input().split()))
+
+arr.sort()
+
+cnt = 0
+
+while arr:
+    if arr[-1] + arr[0] > m:
+        arr.pop()
+        cnt+=1
+    elif arr[-1] + arr[0] <= m:
+        arr.pop()
+        arr.pop(0)
+        cnt +=1
+
+print(cnt)
+import sys
+
+sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+arr= list(map(int , input().split()))
+
+lt = 0 
+rt = n-1
+
+last = 0
+res = ""
+
+
+while lt <= rt :
+    tmp = []
+    if arr[lt] > last:
+        tmp.append((arr[lt],'L'))
+    if arr[rt]>last:
+        tmp.append((arr[rt],'R'))
+    tmp.sort()
+
+    if len(tmp) == 0:
+        break
+    
+    else:
+        res = res + tmp[0][1]
+        last = tmp[0][0]
+        if tmp[0][1] == 'L':
+            lt += 1
+
+        else :
+            rt -=1
+
+print(len(res))
+print(res)
