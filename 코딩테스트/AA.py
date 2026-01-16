@@ -1,26 +1,22 @@
 import sys
-from collections import deque
+from collections import defaultdict
+
 #sys.stdin = open("input.txt", "rt")
 
-arr = list(map(str , input()))
-n = int(input())
+p = defaultdict(int)
+q = defaultdict(int)
+
+word1 = input()
+word2 = input()
+
+for x in word1[0:]:
+    p[x] += 1
+
+for y in word2[0:]:
+    q[y] +=1
 
 
-for i in range(n):
-    plan = input()
-    dq = deque(arr)
-    for x in plan:
-        if x in dq:
-            if x!=dq.popleft():
-                print(f"#{i+1} NO")
-                break
-
-    else:
-        if len(dq) == 0:
-            print(f"#{i+1} YES")
-        else:
-            print(f"#{i+1} NO")
-        
-
-
-
+if p == q :
+    print("YES")
+else:
+    print("NO")

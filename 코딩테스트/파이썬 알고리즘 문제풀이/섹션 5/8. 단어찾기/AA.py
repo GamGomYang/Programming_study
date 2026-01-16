@@ -1,0 +1,20 @@
+import sys
+from collections import defaultdict
+
+#sys.stdin = open("input.txt", "rt")
+
+n = int(input())
+
+p = defaultdict(int)
+for i in range(n):
+    word = input()
+    p[word] = 1
+
+for i in range(n-1):
+    word = input()
+    p[word]= 0
+
+for key , val in p.items():
+    if val == 1:
+        print(key)
+        break
