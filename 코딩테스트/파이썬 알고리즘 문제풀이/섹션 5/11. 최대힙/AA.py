@@ -1,7 +1,9 @@
 import sys
 import heapq
 
-sys.stdin = open("input.txt" , "rt")
+# 최대로 하려면 ? - 반대로 -씌우면 된다.
+
+#sys.stdin = open("input.txt" , "rt")
 
 heap = []
 while True:
