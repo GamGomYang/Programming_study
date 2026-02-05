@@ -1,24 +1,2 @@
-import sys
-import heapq
 
-sys.stdin = open("input.txt" , "rt")
-
-heap = []
-s = 0
-
-while True:
-    s = int(input())
-
-    if s == -1:
-        break
-
-    if s == 0:
-        if heap :
-            print(heapq.heappop(heap))
-
-        else :
-            print(-1)
-        
-    else:
-        heapq.heappush(heap,s)
-
+        dfs(x*2)
