@@ -1,27 +1,23 @@
 import sys
-sys.stdin = open("input.txt", "rt")
-
-def dfs(l, sum, tsum):
-    global result
-    if sum + (total - tsum) < result:
+sys.stdin=open("input.txt", "r")
+def DFS(L, sum):
+    global res
+    if L>=res:
         return
-    if sum > weight:   
+    if sum>m:
         return
-    if l == n:
-        result = max(result, sum)
-        return
+    if sum==m:
+        if L<res:
+            res=L
+    else:
+        for i in range(n):
+            DFS(L+1, sum+a[i])
 
-    dfs(l+1, sum + arr[l] , tsum + arr[l])  
-    dfs(l+1, sum, tsum + arr[l])           
-
-
-if __name__ == "__main__":
-    weight, n = map(int, input().split())
-    arr = []
-    for _ in range(n):
-        arr.append(int(input()))
-
-    total = sum(arr)
-    result = 0
-    dfs(0, 0, 0)
-    print(result)
+if __name__=="__main__":
+    n=int(input())
+    a=list(map(int, input().split()))
+    m=int(input())
+    res=2147000000
+    a.sort(reverse=True)
+    DFS(0, 0)
+    print(res)
