@@ -1,0 +1,58 @@
+import sys
+sys.stdin = open("input.txt", "rt")
+
+def dfs(v):
+    global valid
+    if valid :
+        return
+    sum_0=0
+    sum_1=0
+    
+    if v == n:
+        for i in range(n):
+            if check[i] == 0 :
+                sum_0 += arr[i]
+            else:
+                sum_1 += arr[i]
+        
+        if sum_0 == sum_1:
+            valid = True
+        else:
+            return
+    else:
+        check[v] = 0
+        dfs(v+1)
+        check[v] = 1
+        dfs(v+1)
+
+if __name__ == "__main__":
+    n = int(input())
+    arr = list(map(int , input().split()))
+    check = [0]*(n)
+    valid = False
+    dfs(0)
+
+    if valid:
+        print("YES")
+    else:
+        print("NO")
+
+import sys
+sys.stdin = open('input.txt', 'r')
+
+def dfs(v, dfs_sum):
+    if v == n:
+        if dfs_sum == (total-dfs_sum):
+            print("YES")
+            sys.exit()
+    else:
+        dfs(v+1 , dfs_sum+arr[v])
+        dfs(v+1 , dfs_sum)
+
+if __name__ == "__main__":
+    n = int(input())
+    arr = list(map(int , input().split()))
+    check = [0]*(n)
+    total = sum(arr)
+    dfs(0 , 0)
+    print("NO")
