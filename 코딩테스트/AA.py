@@ -1,14 +1,12 @@
-def solution(sizes):
+def solution(targets):
+    targets.sort(key=lambda x: x[1])
 
-    max_w = 0
-    max_h = 0
+    answer = 0
+    end = -1
 
-    for w,h in sizes:
-        big = max(w,h)
-        small = min(w, h)
+    for s, e in targets:
+        if s >= end:
+            answer += 1
+            end = e
 
-        max_w = max(max_w , big)
-        max_h = max(max_h, small)
-
-    answer = max_w * max_h
     return answer
